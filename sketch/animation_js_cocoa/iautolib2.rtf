@@ -1,0 +1,566 @@
+{\rtf1\ansi\ansicpg936\cocoartf1561\cocoasubrtf400
+{\fonttbl\f0\fswiss\fcharset0 Helvetica;}
+{\colortbl;\red255\green255\blue255;}
+{\*\expandedcolortbl;;}
+\paperw11900\paperh16840\margl1440\margr1440\vieww10800\viewh8400\viewkind0
+\pard\tx566\tx1133\tx1700\tx2267\tx2834\tx3401\tx3968\tx4535\tx5102\tx5669\tx6236\tx6803\pardirnatural\partightenfactor0
+
+\f0\fs24 \cf0 ///////////////////////////////////////////////////////////////////////////\
+// iauto lib\
+\
+// SInherit\
+SInherit = function(className, BaseClass, selectorHandlerDict) \{\
+    var uniqueClassName = className + NSUUID.UUID().UUIDString();\
+    var delegateClassDesc = MOClassDescription.allocateDescriptionForClassWithName_superclass_(uniqueClassName, BaseClass);\
+    for (var selectorString in selectorHandlerDict) \{\
+        delegateClassDesc.addInstanceMethodWithSelector_function_(selectorString, selectorHandlerDict[selectorString]);\
+        //log(selectorString + "->" + selectorHandlerDict[selectorString].toString())\
+    \}\
+    delegateClassDesc.registerClass();\
+    return NSClassFromString(uniqueClassName);\
+\};\
+\
+// SNSButtonInner\
+var SNSButtonInner = SInherit("SNSButton", NSButton, \{\
+    "mouseDown:":function(ev)\{ \
+            //context.document.showMessage('NSButton.mouseDown')\
+            if(this.mouseDownHander)\
+            \{\
+                this.mouseDownHander(ev,this.mouseUpHander.self)\
+            \}\
+        \},\
+    // "mouseUp:":function(ev)\{ \
+    //         //context.document.showMessage('mouseUp')\
+    //         if(this.mouseUpHander)\
+    //         \{\
+    //             this.mouseUpHander(ev)\
+    //         \}\
+    //         if(this.TargetFunction)\
+    //         \{\
+    //             this.TargetFunction(ev)\
+    //         \}\
+    //     \},\
+    "mouseUp:":function(ev)\{ \
+            //context.document.showMessage('NSButton.mouseUp')\
+            if(this.mouseUpHander)\
+            \{\
+                this.mouseUpHander(ev, this.mouseUpHander.self)\
+            \}\
+            if(this.TargetFunctionDelayFromUp)\
+            \{\
+                var tmpEv=ev;\
+                var TargetFunction=this.TargetFunction;\
+                coscript.setShouldKeepAround(true);\
+                coscript.scheduleWithInterval_jsFunction(this.TargetFunctionDelayFromUp, function() \{\
+                    //context.document.showMessage('NSButton.mouseUp schedule TargetFunction')\
+                    TargetFunction(TargetFunction.self)\
+                \});\
+            \}\
+            else\
+            \{\
+                if(this.TargetFunction)\
+                \{\
+                    this.TargetFunction(this.mouseUpHander.self)\
+                \}\
+            \}\
+        \},\
+    "mouseEntered:":function(ev)\{\
+            //context.document.showMessage('mouseEntered')\
+            if(this.mouseEnteredHander)\
+            \{\
+                this.mouseEnteredHander(ev,this.mouseUpHander.self)\
+            \}\
+        \},\
+    "mouseExited:":function(ev)\{ \
+            //context.document.showMessage('mouseExited')\
+            if(this.mouseExitedHander)\
+            \{\
+                this.mouseExitedHander(ev,this.mouseUpHander.self)\
+            \}\
+        \},\
+    "addMouseDownHander:":function(f)\{ \
+            this.mouseDownHander = f;\
+        \},\
+    "addMouseUpHander:":function(f)\{ \
+            this.mouseUpHander = f;\
+        \},\
+    "addMouseEnteredHander:":function(f)\{ \
+            this.mouseEnteredHander = f;\
+        \},\
+    "addMouseExitedHander:":function(f)\{ \
+            this.mouseExitedHander = f;\
+        \},\
+    "setCOSJSTargetFunction:":function(f)\{ \
+            this.TargetFunction = f;\
+        \},\
+    "setTargetFunctionDelayFromUp:":function(time)\{ \
+            this.TargetFunctionDelayFromUp = time;\
+        \},\
+\})\
+\
+// SNSbutton\
+class SNSButton\
+\{\
+    constructor()\
+    \{\
+        this.button = SNSButtonInner.alloc().init();\
+\
+        // create layer\
+        var buttonViewLayer = CALayer.layer();\
+        buttonViewLayer.setBackgroundColor(CGColorCreateGenericRGB(0.4,\'a00.4,\'a00.4,\'a00.8));\
+        this.button.setLayer(buttonViewLayer);\
+        this.button.setWantsLayer(true)\
+        \
+        // create this.buttontextField\
+        this.buttontextField = NSTextField.alloc().init()\
+\
+        // default handler\
+        var self=this;\
+        this.addMouseDownHander(function(ev)\{\
+            self.button.layer().setBackgroundColor(CGColorCreateGenericRGB(0.6,\'a00.0,\'a00.0,\'a00.8));\
+        \})\
+        this.addMouseUpHander(function(ev)\{\
+            self.button.layer().setBackgroundColor(CGColorCreateGenericRGB(0.4,\'a00.4,\'a00.4,\'a00.8));\
+        \})\
+        this.addMouseEnteredHander(function(ev)\{\
+            self.buttontextField.setTextColor(NSColor.colorWithDeviceRed_green_blue_alpha(0.9, 0.9, 0.9, 0.9))\
+        \})\
+        this.addMouseExitedHander(function(ev)\{\
+            self.buttontextField.setTextColor(NSColor.colorWithDeviceRed_green_blue_alpha(0.8, 0.8, 0.8, 0.8))\
+        \})\
+    \}\
+    clear()\
+    \{\
+        var self=this;\
+        if(self.button.layer())\
+        \{\
+            self.button.layer().setBackgroundColor(CGColorCreateGenericRGB(0.6,\'a00.0,\'a00.0,\'a00));\
+        \}\
+\
+        this.addMouseDownHander(function(ev)\{\
+            //self.button.layer().setBackgroundColor(CGColorCreateGenericRGB(0.6,\'a00.0,\'a00.0,\'a00));\
+        \})\
+        this.addMouseUpHander(function(ev)\{\
+            //self.button.layer().setBackgroundColor(CGColorCreateGenericRGB(0.4,\'a00.4,\'a00.4,\'a00));\
+        \})\
+        this.addMouseEnteredHander(function(ev)\{\
+            //self.buttontextField.setTextColor(NSColor.colorWithDeviceRed_green_blue_alpha(0.9, 0.9, 0.9, 0))\
+        \})\
+        this.addMouseExitedHander(function(ev)\{\
+            //self.buttontextField.setTextColor(NSColor.colorWithDeviceRed_green_blue_alpha(0.8, 0.8, 0.8, 0))\
+        \})\
+    \}\
+    getView()\
+    \{\
+        return this.button;\
+    \}\
+    setFrame(frame)\
+    \{\
+        this.button.setFrame(frame);\
+        this.width = frame.size.width;\
+        this.height = frame.size.height;\
+        \
+        // text\
+        var fontH = this.height/2\
+        this.buttontextField.setBezeled(false)\
+        this.buttontextField.setDrawsBackground(false)\
+        this.buttontextField.setEditable(false)\
+        this.buttontextField.setSelectable(false)\
+        this.buttonfont = NSFont.fontWithName_size("Arial", fontH);\
+        this.buttontextField.setFont(this.buttonfont);\
+        this.buttontextField.setTextColor(NSColor.colorWithDeviceRed_green_blue_alpha(0.8, 0.8, 0.8, 0.8))\
+        this.buttontextField.setAlignment(NSCenterTextAlignment)\
+        var textHeigh = this.buttontextField.attributedStringValue().size().height;\
+        var TextY=(this.height-textHeigh)/2\
+        this.buttontextField.setFrame(NSMakeRect(0, TextY, this.width, this.height))\
+        this.button.addSubview(this.buttontextField);\
+\
+        // tracking area\
+        this.buttontrackingArea = NSTrackingArea.alloc().initWithRect_options_owner_userInfo(NSMakeRect(0, 0, this.width, this.height),\
+            NSTrackingMouseMoved+NSTrackingActiveInKeyWindow+NSTrackingMouseEnteredAndExited, this.button, nil);\
+        this.button.addTrackingArea(this.buttontrackingArea);\
+    \}\
+    frame()\
+    \{\
+        return this.button.frame();\
+    \}\
+    setAttributedTitle(text)\
+    \{\
+        this.buttontextField.setStringValue(text);\
+    \}\
+    setImage(image)\
+    \{\
+        this.button.setLayer(nil);\
+        this.button.setImage(image);\
+        this.button.cell().setImageScaling(NSImageScaleAxesIndependently);\
+        this.button.setBordered(false);\
+    \}\
+    addMouseDownHander(f)\{\
+        this.button.addMouseDownHander(f);\
+    \}\
+    addMouseUpHander(f)\{\
+        f.self = this\
+        this.button.addMouseUpHander(f);\
+    \}\
+    addMouseEnteredHander(f)\{\
+        f.self = this\
+        this.button.addMouseEnteredHander(f);\
+    \}\
+    addMouseExitedHander(f)\{\
+        f.self = this\
+        this.button.addMouseExitedHander(f);\
+    \}\
+    setTargetFunctionDelayFromUp(time)\{\
+        this.button.setTargetFunctionDelayFromUp(time);\
+    \}\
+    setCOSJSTargetFunction(f)\
+    \{\
+        f.self = this\
+        this.button.setCOSJSTargetFunction(f);\
+    \}\
+\}\
+\
+// SNSGifView\
+class SNSGifView\
+\{\
+    constructor()\
+    \{\
+        this.imageView = NSImageView.alloc().init(); \
+        //this.imageView.imageFrameStyle = NSImageFramePhoto;\
+        this.imageView.alphaValue = 0.8\
+\
+        this.image = nil;\
+        this.imageList = nil\
+        this.totalFrameCnt = 0\
+    \}\
+    setImage(image)\
+    \{\
+        this.image = image;\
+\
+        //this.imageView.image = image; // this will auto repeat play, cannot control\
+        this.reps = image.representations();\
+        this.bitmapRep = nil\
+        this.totalFrameCnt = 0;\
+        for (var x = 0; x< this.reps.count(); x++) \{\
+            this.bitmapRep = this.reps[x];\
+            var props = this.bitmapRep.valueForProperty(NSImageFrameCount);\
+            this.totalFrameCnt = props.intValue();\
+        \};\
+        //log("totalFrameCnt=" + this.totalFrameCnt.toString())\
+\
+        //set image current\
+        if(this.totalFrameCnt > 0) \{\
+            var number = NSNumber.numberWithInt(0)\
+            this.bitmapRep.setProperty_withValue(NSImageCurrentFrame, number)\
+            var repData = this.bitmapRep.representationUsingType_properties(NSPNGFileType, nil)\
+            image = NSImage.alloc().initWithData(repData);\
+            this.imageView.image = image\
+        \};\
+    \}\
+    setImageFile(filename)\
+    \{\
+        this.setImage(NSImage.alloc().initWithContentsOfFile(filename));\
+    \}\
+    setImagePath(filepath)\
+    \{\
+        this.imageList=[]\
+\
+        var fm=NSFileManager.defaultManager();\
+        var strarray=fm.contentsOfDirectoryAtPath_error(filepath,nil)\
+        var count=strarray.count();\
+\
+        var filelist=[]\
+        for(var i=0;i<count;i++)\
+        \{\
+            var filename=strarray.objectAtIndex(i);\
+            var filefullname=filepath+"/"+filename;\
+            if(filefullname.match(".png"))\
+            \{\
+                filelist.push(filefullname)\
+            \}\
+        \}\
+        filelist.sort();\
+        //log(filelist)\
+\
+        for(var i=0;i<filelist.length;i++)\
+        \{\
+            var image = NSImage.alloc().initWithContentsOfFile(filelist[i]);\
+            this.imageList.push(image)\
+        \}\
+\
+        this.totalFrameCnt=filelist.length\
+    \
+        //set image current\
+        if(this.imageList.length>0)\
+        \{\
+            this.imageView.image = this.imageList[0]\
+        \}\
+    \}\
+    setFrame(frame)\
+    \{\
+        this.imageView.setFrame(frame);\
+    \}\
+    getView()\
+    \{\
+        return this.imageView;\
+    \}\
+    reset()\
+    \{ \
+        var imageView = this.imageView;\
+        var imageList = this.imageList;\
+        var totalFrameCnt = this.totalFrameCnt;\
+        imageView.image=imageList[0]\
+    \}\
+    play(timeinterval)\
+    \{\
+        var totalFrameCnt = this.totalFrameCnt;\
+        var speedOneFrame = timeinterval/totalFrameCnt;\
+        var curFrameIndex = 0;\
+        var imageView = this.imageView;\
+\
+        var bitmapRep = this.bitmapRep;\
+        var imageList = this.imageList;\
+        \
+        for(var i=0; i<=totalFrameCnt; i++)\
+        \{\
+            coscript.setShouldKeepAround(true);\
+            coscript.scheduleWithInterval_jsFunction(i*speedOneFrame, function() \{\
+\
+                if(curFrameIndex>=totalFrameCnt)\
+                \{\
+                    curFrameIndex=0;\
+                \}\
+                //context.document.showMessage(curFrameIndex.toString());\
+                \
+                // draw current frame\
+                var image=nil\
+                if(bitmapRep)\
+                \{\
+                    var number = NSNumber.numberWithInt(curFrameIndex);\
+                    bitmapRep.setProperty_withValue(NSImageCurrentFrame, number);\
+                    var repData = bitmapRep.representationUsingType_properties(NSPNGFileType, nil)\
+                    image = NSImage.alloc().initWithData(repData);\
+                \}\
+                if(imageList)\
+                \{\
+                    image = imageList[curFrameIndex]\
+                \}\
+                \
+                imageView.image = image;\
+                \
+                curFrameIndex=curFrameIndex+1\
+            \});\
+        \}\
+      //   var view2_startFrame = NSValue.valueWithRect(imageView.frame());//chu chang\
+      //  var view2_endFrame =  NSValue.valueWithRect(imageView.frame());\
+      // var view2_key = [NSViewAnimationTargetKey,NSViewAnimationStartFrameKey,NSViewAnimationEndFrameKey];\
+      // var view2_value = [imageView,view2_startFrame,view2_endFrame];\
+      // var view2_dictionary = [NSDictionary dictionaryWithObjects:(view2_value) forKeys:(view2_key)];\
+      // var animation = NSViewAnimation.alloc().initWithViewAnimations(NSArray.arrayWithObject(view2_dictionary));\
+      //                animation.animationCurve = NSAnimationEaseIn;\
+      //               animation.duration = 1;\
+      //               [animation setAnimationBlockingMode:NSAnimationBlocking];\
+      //               [animation startAnimation];\
+\
+    \}\
+\}\
+\
+// SNSListCtrl\
+class SNSListCtrl \{\
+    constructor(context)\
+    \{\
+        this.context = context\
+\
+        this.scrollView = NSScrollView.alloc().init();\
+        this.scrollView.setDrawsBackground(false)\
+        //this.scrollView.hasVerticalScroller = true\
+        //this.scrollView.setHidden(true)\
+\
+        this.btnList = []\
+\
+        this.width = 0;\
+        this.height = 0;\
+        this.itemHeight = 0;\
+        this.grapHeight = 3;\
+    \}\
+    setFrame(frame)\
+    \{\
+        this.scrollView.frame = frame;\
+        this.width = frame.size.width;\
+        this.height = frame.size.height;\
+        this.itemHeight = frame.size.height/4;\
+    \}\
+    setItemHeight(h)\
+    \{\
+        this.itemHeight = h\
+    \}\
+    getView()\
+    \{\
+        log("IAutoList.mainView")\
+        return this.scrollView;\
+    \}\
+    addButton(name, btn)\
+    \{\
+        btn.setAttributedTitle(name);\
+        btn.setFrame(NSMakeRect(0, 0, this.width, this.itemHeight));\
+        //btn.alphaValue = 0.6;\
+        this.btnList.push(btn)\
+    \}\
+    reset()\
+    \{\
+        var contentView = NSView.alloc().init();\
+        this.scrollView.documentView = contentView\
+    \}\
+    play(name="",param=nil)\
+    \{\
+        if(name=="animation_list_in_horizontal")\
+        \{\
+            this.animation_list_in_horizontal()\
+        \}\
+        if(name=="animation_list_in_vertical")\
+        \{\
+            this.animation_list_in_vertical()\
+        \}\
+        if(name=="animation_stretch")\
+        \{\
+            this.animation_stretch(param)\
+        \}\
+    \}\
+    animation_list_in_vertical()\
+    \{\
+        log("IAutoList.show")\
+\
+        var contentView = NSView.alloc().init();\
+        var contentViewHeight = this.btnList.length*(this.itemHeight+this.grapHeight);\
+        if(contentViewHeight<this.height)\
+            contentViewHeight = this.height\
+        contentView.frame = NSMakeRect(0, 0, this.width, contentViewHeight);\
+        this.scrollView.documentView = contentView\
+        \
+        //this.scrollView.setHidden(false)\
+        for(var i=0; i< this.btnList.length; i++)\
+        \{\
+            var btnY = this.height - (i+1)*this.itemHeight - i*this.grapHeight;\
+            this.btnList[i].setFrame(NSMakeRect(0, btnY, this.width, this.itemHeight));\
+            contentView.addSubview(this.btnList[i].getView());\
+        \}\
+\
+        for(var i=0; i< this.btnList.length; i++)\
+        \{\
+            var animationTarget =  this.btnList[i].getView();\
+            var startframe = NSValue.valueWithRect(NSMakeRect(0, -i*100, this.width, this.itemHeight));\
+            var endframe = NSValue.valueWithRect(NSMakeRect(this.btnList[i].frame().origin.x, this.btnList[i].frame().origin.y, this.width, this.itemHeight));\
+            //var endframe = NSValue.valueWithRect(this.btnList[i].frame());\
+            var keys = [NSViewAnimationTargetKey,NSViewAnimationStartFrameKey,NSViewAnimationEndFrameKey];\
+            var values = [animationTarget,startframe,endframe];\
+            var dictionary = [NSDictionary dictionaryWithObjects:(values) forKeys:(keys)];\
+            var animation = NSViewAnimation.alloc().initWithViewAnimations(NSArray.arrayWithObject(dictionary));\
+            animation.animationCurve = NSAnimationEaseIn;\
+            animation.duration = 0.3+0.2*i;\
+            // NSAnimationNonblocking\'a0NSAnimationNonblockingThreaded NSAnimationBlocking\
+            animation.setAnimationBlockingMode(NSAnimationNonblockingThreaded);\
+            animation.startAnimation();\
+\
+        \}\
+\
+    \}\
+\
+    animation_list_in_horizontal()\
+    \{\
+        log("IAutoList.show")\
+\
+        var contentView = NSView.alloc().init();\
+        var contentViewHeight = this.btnList.length*(this.itemHeight+this.grapHeight);\
+        if(contentViewHeight<this.height)\
+            contentViewHeight = this.height\
+        contentView.frame = NSMakeRect(0, 0, this.width, contentViewHeight);\
+        this.scrollView.documentView = contentView\
+        \
+        //this.scrollView.setHidden(false)\
+        for(var i=0; i< this.btnList.length; i++)\
+        \{\
+            var btnY = this.height - (i+1)*this.itemHeight - i*this.grapHeight;\
+            this.btnList[i].setFrame(NSMakeRect(0, btnY, this.width, this.itemHeight));\
+            contentView.addSubview(this.btnList[i].getView());\
+        \}\
+\
+        for(var i=0; i< this.btnList.length; i++)\
+        \{\
+            var animationTarget =  this.btnList[i].getView();\
+            var startframe = NSValue.valueWithRect(NSMakeRect(this.width*2, this.btnList[i].frame().origin.y, this.width, this.itemHeight));\
+            var endframe = NSValue.valueWithRect(this.btnList[i].getView().frame());\
+            var keys = [NSViewAnimationTargetKey,NSViewAnimationStartFrameKey,NSViewAnimationEndFrameKey];\
+            var values = [animationTarget,startframe,endframe];\
+            var dictionary = [NSDictionary dictionaryWithObjects:(values) forKeys:(keys)];\
+            var animation = NSViewAnimation.alloc().initWithViewAnimations(NSArray.arrayWithObject(dictionary));\
+            animation.animationCurve = NSAnimationEaseIn;\
+            animation.duration = 0.5+0.2*i;\
+            animation.setAnimationBlockingMode(NSAnimationNonblockingThreaded);\
+            animation.startAnimation();\
+        \}\
+    \}\
+    animation_stretch(frame)\
+    \{\
+        log("IAutoList.show")\
+\
+        // save W H\
+        var beforeFrame = this.scrollView.frame();\
+        this.width = frame.size.width;\
+        this.height = frame.size.height;\
+\
+        var contentView = NSView.alloc().init();\
+        var contentViewHeight = this.btnList.length*(this.itemHeight+this.grapHeight);\
+        if(contentViewHeight<this.height)\
+            contentViewHeight = this.height\
+        contentView.frame = NSMakeRect(0, 0, frame.size.width, contentViewHeight);\
+        this.scrollView.documentView = contentView\
+        \
+        //this.scrollView.setHidden(false)\
+        for(var i=0; i< this.btnList.length; i++)\
+        \{\
+            var btnY = this.height - (i+1)*this.itemHeight - i*this.grapHeight;\
+            this.btnList[i].setFrame(NSMakeRect(0, btnY, this.width, this.itemHeight));\
+            contentView.addSubview(this.btnList[i].getView());\
+        \}\
+\
+        var animationTarget =  this.scrollView\
+        var startframe = NSValue.valueWithRect(beforeFrame);\
+        var endframe = NSValue.valueWithRect(frame);\
+        var keys = [NSViewAnimationTargetKey,NSViewAnimationStartFrameKey,NSViewAnimationEndFrameKey];\
+        var values = [animationTarget,startframe,endframe];\
+        var dictionary = [NSDictionary dictionaryWithObjects:(values) forKeys:(keys)];\
+        var animation = NSViewAnimation.alloc().initWithViewAnimations(NSArray.arrayWithObject(dictionary));\
+        animation.animationCurve = NSAnimationEaseIn;\
+        animation.duration = 0.5;\
+        animation.setAnimationBlockingMode(NSAnimationNonblockingThreaded);\
+        animation.startAnimation();\
+\
+        var animationTarget =  this.scrollView.documentView\
+        var startframe = NSValue.valueWithRect(beforeFrame);\
+        var endframe = NSValue.valueWithRect(frame);\
+        var keys = [NSViewAnimationTargetKey,NSViewAnimationStartFrameKey,NSViewAnimationEndFrameKey];\
+        var values = [animationTarget,startframe,endframe];\
+        var dictionary = [NSDictionary dictionaryWithObjects:(values) forKeys:(keys)];\
+        var animation = NSViewAnimation.alloc().initWithViewAnimations(NSArray.arrayWithObject(dictionary));\
+        animation.animationCurve = NSAnimationEaseIn;\
+        animation.duration = 0.5;\
+        animation.setAnimationBlockingMode(NSAnimationNonblockingThreaded);\
+        animation.startAnimation();\
+\
+        for(var i=0; i< this.btnList.length; i++)\
+        \{\
+            var animationTarget =  this.btnList[i].getView()\
+            var startframe = NSValue.valueWithRect(NSMakeRect(this.btnList[i].getView().frame().origin.x, this.btnList[i].getView().frame().origin.y, \
+                this.btnList[i].getView().frame().size.width, this.itemHeight));\
+            var endframe = NSValue.valueWithRect(NSMakeRect(0, this.btnList[i].getView().frame().origin.y, frame.size.width, this.itemHeight));\
+            var keys = [NSViewAnimationTargetKey,NSViewAnimationStartFrameKey,NSViewAnimationEndFrameKey];\
+            var values = [animationTarget,startframe,endframe];\
+            var dictionary = [NSDictionary dictionaryWithObjects:(values) forKeys:(keys)];\
+            var animation = NSViewAnimation.alloc().initWithViewAnimations(NSArray.arrayWithObject(dictionary));\
+            animation.animationCurve = NSAnimationEaseIn;\
+            animation.duration = 0.5;\
+            animation.setAnimationBlockingMode(NSAnimationNonblockingThreaded);\
+            animation.startAnimation();\
+        \}\
+     \}\
+\}}

@@ -1,0 +1,163 @@
+{\rtf1\ansi\ansicpg936\cocoartf1561\cocoasubrtf400
+{\fonttbl\f0\fnil\fcharset0 AndaleMono;}
+{\colortbl;\red255\green255\blue255;\red0\green0\blue0;\red67\green67\blue67;\red0\green0\blue255;
+\red251\green0\blue7;}
+{\*\expandedcolortbl;;\csgray\c0;\csgray\c33333;\cssrgb\c0\c0\c100000;
+\cssrgb\c100000\c0\c0;}
+\paperw11900\paperh16840\margl1440\margr1440\vieww24900\viewh14080\viewkind0
+\pard\tx560\tx1120\tx1680\tx2240\tx2800\tx3360\tx3920\tx4480\tx5040\tx5600\tx6160\tx6720\slleading20\pardirnatural\partightenfactor0
+
+\f0\fs24 \cf2 log(\cf3 "start 1"\cf2 )\
+\
+\cf4 class\cf2  PreView \{\
+    constructor(context)\
+    \{\
+        coscript.setShouldKeepAround(\cf4 true\cf2 );\
+\
+        \cf4 this\cf2 .context = context;\
+        \cf4 var\cf2  identifier = \cf3 "myToolbarThread"\cf2 ;\
+        \cf4 var\cf2  threadDictionary = NSThread.mainThread().threadDictionary();\
+        \cf4 var\cf2  Toolbar = threadDictionary[identifier];\
+        \cf4 if\cf2 (!Toolbar)\{\
+            Toolbar = NSPanel.alloc().init();\
+            Toolbar.setStyleMask(NSTitledWindowMask + NSFullSizeContentViewWindowMask);\
+            Toolbar.setBackgroundColor(NSColor.colorWithRed_green_blue_alpha(\cf4 0.9\cf2 , \cf4 0.9\cf2 , \cf4 0.9\cf2 , \cf4 1\cf2 ));\
+            Toolbar.setTitleVisibility(NSWindowTitleHidden);\
+            Toolbar.setTitlebarAppearsTransparent(\cf4 true\cf2 );\
+\
+            Toolbar.setFrame_display(NSMakeRect(\cf4 0\cf2 , \cf4 0\cf2 , \cf4 800\cf2 , \cf4 480\cf2 ), \cf4 false\cf2 );\
+            Toolbar.setMovableByWindowBackground(\cf4 true\cf2 );\
+            Toolbar.becomeKeyWindow();\
+            Toolbar.setLevel(NSFloatingWindowLevel);\
+\
+            \cf4 var\cf2  contentView = Toolbar.contentView();\
+            \cf4 this\cf2 .context.document.showMessage(\cf3 'Start'\cf2 )\
+\
+        \
+        \cf4 var\cf2  bc = NSColor.colorWithRed_green_blue_alpha(\cf4 1.0\cf2 , \cf4 0.2\cf2 , \cf4 0.2\cf2 , \cf4 1\cf2 ).CGColor;\
+        \cf5 //var newView = NSView.alloc().initWithFrame(NSMakeRect(0, 0, 800, 800)); \cf2 \
+        \cf4 var\cf2  newView = NSView.alloc().init();\
+        newView.frame = NSMakeRect(\cf4 300\cf2 , \cf4 300\cf2 , \cf4 200\cf2 , \cf4 200\cf2 );\
+        newView.setWantsLayer(\cf4 true\cf2 );\
+        \cf4 var\cf2  viewLayer = CALayer.layer();\
+        viewLayer.setBackgroundColor(CGColorCreateGenericRGB(\cf4 0.8\cf2 ,\'a0\cf4 0.0\cf2 ,\'a0\cf4 0.0\cf2 ,\'a0\cf4 1\cf2 ));\
+        newView.setLayer(viewLayer);\
+        newView.alphaValue = \cf4 1\cf2 ;\
+\
+        contentView.addSubview(newView);\
+\
+        \cf4 var\cf2  newView2 = NSView.alloc().init();\
+        newView2.frame = NSMakeRect(\cf4 360\cf2 , \cf4 360\cf2 , \cf4 300\cf2 , \cf4 100\cf2 );\
+        newView2.setWantsLayer(\cf4 true\cf2 );\
+        \cf4 var\cf2  viewLayer2 = CALayer.layer();\
+        viewLayer2.setBackgroundColor(CGColorCreateGenericRGB(\cf4 0.0\cf2 ,\'a0\cf4 0.8\cf2 ,\'a0\cf4 0.0\cf2 ,\'a0\cf4 1\cf2 ));\
+        newView2.setLayer(viewLayer2);\
+        contentView.addSubview(newView2);\
+\
+        \cf4 var\cf2  testButton = \cf4 this\cf2 .addButton( NSMakeRect(\cf4 20\cf2 , \cf4 20\cf2 , \cf4 40\cf2 , \cf4 40\cf2 ), \cf3 "test"\cf2 ,\
+                            \cf4 function\cf2 (sender)\{\
+                                ctx.document.showMessage(\cf3 'test'\cf2 )\
+                            \}\
+                          );\
+        \cf5 //var testButton = NSButton.alloc().initWithFrame(NSMakeRect(0, 0, 98, 100));\cf2 \
+        \cf4 var\cf2  btn_image = NSImage.alloc().initWithContentsOfFile(\cf3 "/Users/navibase/sketch-iauto/btn.png"\cf2 );\
+        log(btn_image)\
+        \cf5 //var btnLayer2 = CALayer.layer();\cf2 \
+        \cf5 //btnLayer2.setBackgroundColor(CGColorCreateGenericRGB(0.0,\'a00.8,\'a00.0,\'a01));\cf2 \
+        \cf5 //testButton.setLayer(btnLayer2);\cf2 \
+        testButton.setImage(btn_image)\
+        testButton.cell().setImageScaling(NSImageScaleAxesIndependently);\
+\pard\tx560\tx1120\tx1680\tx2240\tx2800\tx3360\tx3920\tx4480\tx5040\tx5600\tx6160\tx6720\pardirnatural\partightenfactor0
+        \cf5 //testButton.transparent = true;\cf2 \
+\pard\tx560\tx1120\tx1680\tx2240\tx2800\tx3360\tx3920\tx4480\tx5040\tx5600\tx6160\tx6720\slleading20\pardirnatural\partightenfactor0
+        \cf5 //btnLayer2.setWantsLayer(true);\cf2 \
+        newView.addSubview(testButton);\
+\
+\
+\
+            \cf4 var\cf2  ctx = \cf4 this\cf2 .context;\
+            \cf4 var\cf2  hideButton = \cf4 this\cf2 .addButton( NSMakeRect(\cf4 14\cf2 , \cf4 14\cf2 , \cf4 80\cf2 , \cf4 20\cf2 ), \cf3 "hide"\cf2 ,\
+                            \cf4 function\cf2 (sender)\{\
+                                \cf5 //coscript.setShouldKeepAround(false);\cf2 \
+                                \cf5 //threadDictionary.removeObjectForKey(identifier);\cf2 \
+                                \cf5 //Toolbar.close();\cf2 \
+                                ctx.document.showMessage(\cf3 'hide'\cf2 )\
+                                \cf5 //newView.frame = NSMakeRect(0, 0, 0, 0);\cf2 \
+                                \cf5 //newView.frame = NSMakeRect(0, 0, 0, 0);\cf2 \
+                                newView.setHidden(\cf4 true\cf2 )\
+                            \}\
+                          );\
+            \cf4 var\cf2  showButton = \cf4 this\cf2 .addButton( NSMakeRect(\cf4 100\cf2 , \cf4 14\cf2 , \cf4 80\cf2 , \cf4 20\cf2 ), \cf3 "show"\cf2 ,\
+                            \cf4 function\cf2 (sender)\{\
+                                \cf5 //coscript.setShouldKeepAround(false);\cf2 \
+                                \cf5 //threadDictionary.removeObjectForKey(identifier);\cf2 \
+                                \cf5 //Toolbar.close();\cf2 \
+                                ctx.document.showMessage(\cf3 'show'\cf2 )\
+                                \cf5 //newView.frame = NSMakeRect(0, 0, 0, 0);\cf2 \
+                                \cf5 //newView.frame = NSMakeRect(300, 300, 200, 200);\cf2 \
+                                newView.setHidden(\cf4 false\cf2 )\
+                            \}\
+                          );\
+\
+            \cf4 var\cf2  alphaSButton = \cf4 this\cf2 .addButton( NSMakeRect(\cf4 200\cf2 , \cf4 14\cf2 , \cf4 80\cf2 , \cf4 20\cf2 ), \cf3 "alphaS"\cf2 ,\
+                            \cf4 function\cf2 (sender)\{\
+                                \cf5 //coscript.setShouldKeepAround(false);\cf2 \
+                                \cf5 //threadDictionary.removeObjectForKey(identifier);\cf2 \
+                                \cf5 //Toolbar.close();\cf2 \
+                                ctx.document.showMessage(\cf3 'alphaS'\cf2 )\
+                                \cf5 //newView.frame = NSMakeRect(0, 0, 0, 0);\cf2 \
+                                \cf5 //newView.frame = NSMakeRect(300, 300, 200, 200);\cf2 \
+                                newView.alphaValue = \cf4 0.3\cf2 ;\
+                            \}\
+                          );\
+            \cf4 var\cf2  alphaAButton = \cf4 this\cf2 .addButton( NSMakeRect(\cf4 300\cf2 , \cf4 14\cf2 , \cf4 80\cf2 , \cf4 20\cf2 ), \cf3 "alphaA"\cf2 ,\
+                            \cf4 function\cf2 (sender)\{\
+                                \cf5 //coscript.setShouldKeepAround(false);\cf2 \
+                                \cf5 //threadDictionary.removeObjectForKey(identifier);\cf2 \
+                                \cf5 //Toolbar.close();\cf2 \
+                                ctx.document.showMessage(\cf3 'alphaA'\cf2 )\
+                                \cf5 //newView.frame = NSMakeRect(0, 0, 0, 0);\cf2 \
+                                \cf5 //newView.frame = NSMakeRect(300, 300, 200, 200);\cf2 \
+                                newView.alphaValue = \cf4 1.0\cf2 ;\
+                            \}\
+                          );\
+\
+            \cf4 var\cf2  closeButton = \cf4 this\cf2 .addButton( NSMakeRect(\cf4 400\cf2 , \cf4 14\cf2 , \cf4 80\cf2 , \cf4 20\cf2 ), \cf3 "close"\cf2 ,\
+                            \cf4 function\cf2 (sender)\{\
+                                coscript.setShouldKeepAround(\cf4 false\cf2 );\
+                                threadDictionary.removeObjectForKey(identifier);\
+                                Toolbar.close();\
+                                ctx.document.showMessage(\cf3 'close'\cf2 )\
+                            \}\
+                          );\
+\
+            contentView.addSubview(hideButton);\
+            contentView.addSubview(showButton);\
+            contentView.addSubview(alphaSButton);\
+            contentView.addSubview(alphaAButton);\
+            contentView.addSubview(closeButton);\
+\
+            threadDictionary[identifier] = Toolbar;\
+            Toolbar.center();\
+            Toolbar.makeKeyAndOrderFront(\cf4 nil\cf2 );\
+\
+        \}\
+    \}\
+\
+    addButton(rect, name, callAction)\{\
+        \cf4 var\cf2  button = NSButton.alloc().initWithFrame(rect);\
+        \cf5 //image = this.getImage(rect.size, name);\cf2 \
+        \cf5 //button.setImage(image);\cf2 \
+        button.setAttributedTitle(name);\
+        button.setBordered(\cf4 false\cf2 );\
+        \cf5 //button.sizeToFit();\cf2 \
+        button.setButtonType(NSMomentaryChangeButton)\
+        button.setCOSJSTargetFunction(callAction);\
+        \cf5 //button.setAction("callAction:");\cf2 \
+        \cf4 return\cf2  button;\
+    \}\
+\}\
+\
+\cf4 var\cf2  pv = \cf4 new\cf2  PreView(context)\
+\
+log(\cf3 "over 3"\cf2 )}

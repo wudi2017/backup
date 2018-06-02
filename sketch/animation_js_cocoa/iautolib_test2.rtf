@@ -1,0 +1,171 @@
+{\rtf1\ansi\ansicpg936\cocoartf1561\cocoasubrtf400
+{\fonttbl\f0\fnil\fcharset0 AndaleMono;}
+{\colortbl;\red255\green255\blue255;\red0\green0\blue0;\red67\green67\blue67;\red0\green0\blue255;
+\red251\green0\blue7;}
+{\*\expandedcolortbl;;\csgray\c0;\csgray\c33333;\cssrgb\c0\c0\c100000;
+\cssrgb\c100000\c0\c0;}
+\paperw11900\paperh16840\margl1440\margr1440\vieww30640\viewh15860\viewkind0
+\pard\tx560\tx1120\tx1680\tx2240\tx2800\tx3360\tx3920\tx4480\tx5040\tx5600\tx6160\tx6720\pardirnatural\partightenfactor0
+
+\f0\fs24 \cf2 log(\cf3 "start2"\cf2 )\
+coscript.setShouldKeepAround(\cf4 true\cf2 );\
+@\cf4 import\cf2  \cf3 '/Users/navibase/sketch-iauto/sketchplugin/sketchiauto.sketchplugin/Contents/Sketch/libGenerator/iautoTagDef.js'\cf2 \
+@\cf4 import\cf2  \cf3 '/Users/navibase/sketch-iauto/sketchplugin/sketchiauto.sketchplugin/Contents/Sketch/iautolib.js'\cf2 \
+@\cf4 import\cf2  \cf3 '/Users/navibase/sketch-iauto/sketchplugin/sketchiauto.sketchplugin/Contents/Sketch/previewlib.js'\cf2 \
+\
+preview = \cf4 new\cf2  PreView(context)\
+\cf4 var\cf2  contentView=preview.rootView;\
+\cf4 var\cf2  panelView=preview.Toolbar.contentView()\
+contentView.setWantsLayer(\cf4 true\cf2 ) \cf5 // !!!!!!!!!!!!!!!!!!!!!!!!!!!!!\cf2 \
+\
+\cf5 /////////////////////////////////////\cf2 \
+\cf5 //rootView\cf2 \
+\
+\cf5 // image background\cf2 \
+imageView = NSImageView.alloc().init();\
+imageView.frame = NSMakeRect(\cf4 0\cf2 , \cf4 0\cf2 , \cf4 800\cf2 , \cf4 480\cf2 );\
+imageView.imageFrameStyle = NSImageFramePhoto; \
+imageView.imageScaling = NSImageScaleNone;\
+\cf4 var\cf2  image = NSImage.alloc().initWithContentsOfFile(\cf3 "/Users/navibase/sketch-iauto/pic1.jpeg"\cf2 );\
+imageView.image = image\
+contentView.addSubview(imageView);\
+\
+\
+\cf5 //SNSListCtrl\cf2 \
+listCtrl = \cf4 new\cf2  SNSListCtrl();\
+listCtrl.setFrame(NSMakeRect(\cf4 200\cf2 , \cf4 50\cf2 , \cf4 300\cf2 , \cf4 300\cf2 ));\
+listCtrl.setItemHeight(\cf4 50\cf2 )\
+sbtn1 = \cf4 new\cf2  SNSButton()\
+sbtn1.addMouseEnteredHander(\cf4 function\cf2 (ev)\{\
+            sbtn1.buttontextField.setTextColor(NSColor.colorWithDeviceRed_green_blue_alpha(\cf4 1\cf2 , \cf4 0\cf2 , \cf4 0\cf2 , \cf4 1\cf2 ))\
+        \})\
+listCtrl.addButton(\cf3 "button1"\cf2 , sbtn1)\
+sbtn2 = \cf4 new\cf2  SNSButton()\
+sbtn2.clear()\
+sbtn2.setImage(NSImage.alloc().initWithContentsOfFile(\cf3 "/Users/navibase/sketch-iauto/btn.png"\cf2 ))\
+listCtrl.addButton(\cf3 "button2"\cf2 , sbtn2)\
+sbtn3 = \cf4 new\cf2  SNSButton()\
+listCtrl.addButton(\cf3 "button3"\cf2 , sbtn3)\
+sbtn4 = \cf4 new\cf2  SNSButton()\
+listCtrl.addButton(\cf3 "button4"\cf2 , sbtn4)\
+sbtn5 = \cf4 new\cf2  SNSButton()\
+listCtrl.addButton(\cf3 "button5"\cf2 , sbtn5)\
+contentView.addSubview(listCtrl.getView());\
+\cf5 //listCtrl.play("animation_list_in_horizontal");\cf2 \
+\cf5 //listCtrl.play("animation_list_in_vertical");\cf2 \
+\cf5 // listCtrl.play("animation_stretch", NSMakeRect(50, 50, 600, 300));\cf2 \
+listCtrl.play(\cf3 "animation_stretch"\cf2 , NSMakeRect(\cf4 50\cf2 , \cf4 50\cf2 , \cf4 600\cf2 , \cf4 300\cf2 ));\
+\
+\cf4 var\cf2  button_animation1 = NSButton.alloc().initWithFrame(NSMakeRect(\cf4 0\cf2 , \cf4 0\cf2 , \cf4 80\cf2 , \cf4 20\cf2 ));\
+button_animation1.setAttributedTitle(\cf3 "animation1"\cf2 );\
+button_animation1.setBordered(\cf4 true\cf2 );\
+button_animation1.setCOSJSTargetFunction(\cf4 function\cf2 (sender)\{\
+        context.document.showMessage(\cf3 'animation_list_in_vertical'\cf2 )\
+        listCtrl.play(\cf3 "animation_list_in_vertical"\cf2 );\
+    \});\
+contentView.addSubview(button_animation1);\
+\
+\cf4 var\cf2  button_animation2 = NSButton.alloc().initWithFrame(NSMakeRect(\cf4 100\cf2 , \cf4 0\cf2 , \cf4 80\cf2 , \cf4 20\cf2 ));\
+button_animation2.setAttributedTitle(\cf3 "animation2"\cf2 );\
+button_animation2.setBordered(\cf4 true\cf2 );\
+button_animation2.setCOSJSTargetFunction(\cf4 function\cf2 (sender)\{\
+        context.document.showMessage(\cf3 'animation_list_in_horizontal'\cf2 )\
+        listCtrl.play(\cf3 "animation_list_in_horizontal"\cf2 );\
+    \});\
+contentView.addSubview(button_animation2);\
+\
+\cf4 var\cf2  button_stretch1 = NSButton.alloc().initWithFrame(NSMakeRect(\cf4 200\cf2 , \cf4 0\cf2 , \cf4 80\cf2 , \cf4 20\cf2 ));\
+button_stretch1.setAttributedTitle(\cf3 "stretch1"\cf2 );\
+button_stretch1.setBordered(\cf4 true\cf2 );\
+button_stretch1.setCOSJSTargetFunction(\cf4 function\cf2 (sender)\{\
+        context.document.showMessage(\cf3 'stretch1'\cf2 )\
+        listCtrl.play(\cf3 "animation_stretch"\cf2 , NSMakeRect(\cf4 50\cf2 , \cf4 50\cf2 , \cf4 600\cf2 , \cf4 300\cf2 ));\
+    \});\
+contentView.addSubview(button_stretch1);\
+\
+\cf4 var\cf2  button_stretch2 = NSButton.alloc().initWithFrame(NSMakeRect(\cf4 300\cf2 , \cf4 0\cf2 , \cf4 80\cf2 , \cf4 20\cf2 ));\
+button_stretch2.setAttributedTitle(\cf3 "stretch2"\cf2 );\
+button_stretch2.setBordered(\cf4 true\cf2 );\
+button_stretch2.setCOSJSTargetFunction(\cf4 function\cf2 (sender)\{\
+        context.document.showMessage(\cf3 'stretch2'\cf2 )\
+        listCtrl.play(\cf3 "animation_stretch"\cf2 , NSMakeRect(\cf4 50\cf2 , \cf4 50\cf2 , \cf4 300\cf2 , \cf4 300\cf2 ));\
+    \});\
+contentView.addSubview(button_stretch2);\
+\
+\cf4 var\cf2  button_stretch2 = NSButton.alloc().initWithFrame(NSMakeRect(\cf4 400\cf2 , \cf4 0\cf2 , \cf4 80\cf2 , \cf4 20\cf2 ));\
+button_stretch2.setAttributedTitle(\cf3 "reset"\cf2 );\
+button_stretch2.setBordered(\cf4 true\cf2 );\
+button_stretch2.setCOSJSTargetFunction(\cf4 function\cf2 (sender)\{\
+        context.document.showMessage(\cf3 'reset'\cf2 )\
+        listCtrl.reset();\
+    \});\
+contentView.addSubview(button_stretch2);\
+\
+\cf5 /////////////////////////////////////\cf2 \
+\cf5 //panelView\cf2 \
+\
+\cf4 var\cf2  gifViewSelected = \cf4 new\cf2  SNSGifView()\
+gifViewSelected.setImagePath(\cf3 "/Users/navibase/sketch-iauto/frameanimation/Selected"\cf2 )\
+gifViewSelected.setFrame(NSMakeRect(\cf4 0\cf2 , \cf4 0\cf2 , \cf4 100\cf2 , \cf4 100\cf2 ))\
+\cf4 var\cf2  gifViewPress = \cf4 new\cf2  SNSGifView()\
+gifViewPress.setImagePath(\cf3 "/Users/navibase/sketch-iauto/frameanimation/Press"\cf2 )\
+gifViewPress.setFrame(NSMakeRect(\cf4 0\cf2 , \cf4 0\cf2 , \cf4 100\cf2 , \cf4 100\cf2 ))\
+\
+sbtn_test = \cf4 new\cf2  SNSButton()\
+sbtn_test.clear()\
+sbtn_test.setFrame(NSMakeRect(\cf4 10\cf2 , \cf4 500\cf2 , \cf4 100\cf2 , \cf4 100\cf2 ))\
+sbtn_test.getView().addSubview(gifViewSelected.getView())\
+\cf5 //sbtn_test.setAttributedTitle("test");\cf2 \
+panelView.addSubview(sbtn_test.getView());\
+sbtn_test.addMouseUpHander(\cf4 function\cf2 (ev)\{\
+    gifViewSelected.play(\cf4 0.5\cf2 );\
+    sbtn_test.setTargetFunctionDelayFromUp(\cf4 0.5\cf2 )\
+    context.document.showMessage(\cf3 'sbtn_test clicked'\cf2 ) \
+\})\
+\
+sbtn_test2 = \cf4 new\cf2  SNSButton()\
+sbtn_test2.clear()\
+sbtn_test2.setFrame(NSMakeRect(\cf4 200\cf2 , \cf4 500\cf2 , \cf4 100\cf2 , \cf4 100\cf2 ))\
+sbtn_test2.getView().addSubview(gifViewPress.getView())\
+\cf5 //sbtn_test.setAttributedTitle("test");\cf2 \
+panelView.addSubview(sbtn_test2.getView());\
+sbtn_test2.addMouseUpHander(\cf4 function\cf2 (ev)\{\
+    gifViewPress.play(\cf4 0.5\cf2 );\
+    sbtn_test2.setTargetFunctionDelayFromUp(\cf4 0.5\cf2 )\
+    context.document.showMessage(\cf3 'sbtn_test2 clicked'\cf2 ) \
+\})\
+\
+\
+sbtn_test.setCOSJSTargetFunction(\cf4 function\cf2 (sender)\{\
+\
+    \cf4 var\cf2  viewALayer = contentView.layer();\
+    \
+    \cf5 // frame\cf2 \
+    \cf4 var\cf2  fromRect=NSMakeRect(\cf4 500\cf2 , \cf4 500\cf2 , \cf4 800\cf2 , \cf4 480\cf2 )\
+    \cf4 var\cf2  toRect=NSMakeRect(\cf4 0\cf2 , \cf4 0\cf2 , \cf4 800\cf2 , \cf4 480\cf2 )\
+    fmAnimPos = CAKeyframeAnimation.animationWithKeyPath(@\cf3 "position"\cf2 );\'a0\
+    \cf4 var\cf2  thePath=CGPathCreateMutable()\
+    CGPathMoveToPoint(thePath,\cf4 nil\cf2 ,fromRect.origin.x,fromRect.origin.y);\
+    CGPathAddLineToPoint(thePath,\cf4 nil\cf2 ,toRect.origin.x,toRect.origin.y);\
+    fmAnimPos.path=thePath;\
+    fmAnimW = CABasicAnimation.animationWithKeyPath(\cf3 "bounds.size.width"\cf2 );\
+    fmAnimW.setFromValue(fromRect.size.width)\
+    fmAnimW.setToValue(toRect.size.width)\
+    fmAnimH = CABasicAnimation.animationWithKeyPath(\cf3 "bounds.size.height"\cf2 );\
+    fmAnimH.setFromValue(fromRect.size.height)\
+    fmAnimH.setToValue(toRect.size.height)\
+    \cf5 // opacity \cf2 \
+    \cf4 var\cf2  animation1 = CABasicAnimation.animationWithKeyPath(@\cf3 "opacity"\cf2 )\
+    animation1.fromValue = \cf4 0.0\cf2 ;\
+    animation1.toValue = \cf4 1.0\cf2 ;\
+\
+    \cf5 //group\cf2 \
+    animationgroup = CAAnimationGroup.animation();\
+    animationgroup.animations=[fmAnimPos,fmAnimW,fmAnimH,animation1]\
+    animationgroup.setDuration(\cf4 3\cf2 )\
+    \cf5 //animationgroup.setRepeatCount(1);\'a0\cf2 \
+    viewALayer.addAnimation_forKey(animationgroup, \cf4 nil\cf2 )\
+\});\
+\
+\
+preview.show()}

@@ -1,0 +1,91 @@
+{\rtf1\ansi\ansicpg936\cocoartf1561\cocoasubrtf400
+{\fonttbl\f0\fnil\fcharset0 AndaleMono;}
+{\colortbl;\red255\green255\blue255;\red0\green0\blue0;\red67\green67\blue67;\red0\green0\blue255;
+\red251\green0\blue7;}
+{\*\expandedcolortbl;;\csgray\c0;\csgray\c33333;\cssrgb\c0\c0\c100000;
+\cssrgb\c100000\c0\c0;}
+\paperw11900\paperh16840\margl1440\margr1440\vieww26040\viewh11340\viewkind0
+\pard\tx560\tx1120\tx1680\tx2240\tx2800\tx3360\tx3920\tx4480\tx5040\tx5600\tx6160\tx6720\pardirnatural\partightenfactor0
+
+\f0\fs24 \cf2 log(\cf3 "start"\cf2 )\
+coscript.setShouldKeepAround(\cf4 true\cf2 );\
+\
+\pard\tx560\tx1120\tx1680\tx2240\tx2800\tx3360\tx3920\tx4480\tx5040\tx5600\tx6160\tx6720\pardirnatural\partightenfactor0
+\cf4 var\cf2  identifier = \cf3 "myToolbarThread"\cf2 ;\
+\cf4 var\cf2  threadDictionary = NSThread.mainThread().threadDictionary();\
+\cf4 var\cf2  Toolbar = threadDictionary[identifier];\
+Toolbar = NSPanel.alloc().init();\
+\pard\tx560\tx1120\tx1680\tx2240\tx2800\tx3360\tx3920\tx4480\tx5040\tx5600\tx6160\tx6720\pardirnatural\partightenfactor0
+\cf5 //Toolbar.setStyleMask(NSTitledWindowMask + NSFullSizeContentViewWindowMask);\cf2 \
+Toolbar.setBackgroundColor(NSColor.colorWithRed_green_blue_alpha(\cf4 0.9\cf2 , \cf4 0.9\cf2 , \cf4 0.9\cf2 , \cf4 1\cf2 ));\
+\cf5 //Toolbar.setTitleVisibility(NSWindowTitleHidden);\cf2 \
+Toolbar.setTitlebarAppearsTransparent(\cf4 true\cf2 );\
+Toolbar.setFrame_display(NSMakeRect(\cf4 0\cf2 , \cf4 0\cf2 , \cf4 800\cf2 , \cf4 480\cf2 ), \cf4 false\cf2 );\
+Toolbar.setMovableByWindowBackground(\cf4 true\cf2 );\
+Toolbar.becomeKeyWindow();\
+Toolbar.setLevel(NSFloatingWindowLevel);\
+\pard\tx560\tx1120\tx1680\tx2240\tx2800\tx3360\tx3920\tx4480\tx5040\tx5600\tx6160\tx6720\pardirnatural\partightenfactor0
+\cf4 var\cf2  contentView = Toolbar.contentView();\
+context.document.showMessage(\cf3 'Start'\cf2 )   \
+\
+\pard\tx560\tx1120\tx1680\tx2240\tx2800\tx3360\tx3920\tx4480\tx5040\tx5600\tx6160\tx6720\pardirnatural\partightenfactor0
+\cf5 /////////////////////////////////////////////////////////////////////\cf2 \
+\
+image = NSImage.alloc().initWithContentsOfFile(\cf3 "/Users/navibase/sketch-iauto/timg.gif"\cf2 );\
+reps = image.representations();\
+bitmapRep = \cf4 nil\cf2 \
+numFrame = \cf4 0\cf2 ;\
+\pard\tx560\tx1120\tx1680\tx2240\tx2800\tx3360\tx3920\tx4480\tx5040\tx5600\tx6160\tx6720\pardirnatural\partightenfactor0
+\cf4 for\cf2  (\cf4 var\cf2  x = \cf4 0\cf2 ; x< reps.count(); x++) \{\
+    \cf5 //context.document.showMessage(x);\cf2 \
+    bitmapRep = reps[x];\
+    props = bitmapRep.valueForProperty(NSImageFrameCount);\
+    numFrame = props.intValue();\
+    context.document.showMessage(numFrame);\
+\
+    \cf4 for\cf2  (\cf4 var\cf2  i = \cf4 0\cf2 ; i < numFrame; i++) \{\
+        number = NSNumber.numberWithInt(\cf4 0\cf2 )\
+        bitmapRep.setProperty_withValue(NSImageCurrentFrame, number)\
+        repData = bitmapRep.representationUsingType_properties(NSPNGFileType, \cf4 nil\cf2 )\
+        image = NSImage.alloc().initWithData(repData);\
+        \cf5 //NSThread.sleepForTimeInterval(0.1);\cf2 \
+    \};\
+\};\
+\
+imageView = NSImageView.alloc().initWithFrame(NSMakeRect(\cf4 0\cf2 , \cf4 0\cf2 , \cf4 300\cf2 , \cf4 300\cf2 )); \
+imageView.imageFrameStyle = NSImageFramePhoto;\
+imageView.backgroundColor = NSColor.redColor().CGColor();\
+imageView.image = image;\
+contentView.addSubview(imageView);\
+\
+\
+\cf4 var\cf2  button1 = NSButton.alloc().initWithFrame(NSMakeRect(\cf4 400\cf2 , \cf4 0\cf2 , \cf4 80\cf2 , \cf4 20\cf2 ));\
+button1.setAttributedTitle(\cf3 "button1"\cf2 );\
+button1.setBordered(\cf4 true\cf2 );\
+button1.sizeToFit();\
+iShow = \cf4 0\cf2 \
+button1.setCOSJSTargetFunction(\cf4 function\cf2 (sender)\{\
+        context.document.showMessage(\cf3 'button1'\cf2 )\
+        iShow = iShow + \cf4 1\cf2 \
+        \cf4 if\cf2  (iShow >= numFrame) \{\
+            iShow = \cf4 0\cf2 ;\
+        \};\
+        context.document.showMessage(iShow);\
+\
+        number = NSNumber.numberWithInt(iShow)\
+        bitmapRep.setProperty_withValue(NSImageCurrentFrame, number)\
+        repData = bitmapRep.representationUsingType_properties(NSPNGFileType, \cf4 nil\cf2 )\
+        image = NSImage.alloc().initWithData(repData);\
+        imageView.image = image;\
+    \});\
+contentView.addSubview(button1);\
+\
+\
+\pard\tx560\tx1120\tx1680\tx2240\tx2800\tx3360\tx3920\tx4480\tx5040\tx5600\tx6160\tx6720\pardirnatural\partightenfactor0
+\cf5 /////////////////////////////////////////////////////////////////////\cf2 \
+\
+threadDictionary[identifier] = Toolbar;\
+Toolbar.center();\
+Toolbar.makeKeyAndOrderFront(\cf4 nil\cf2 );\
+\
+log(\cf3 "over"\cf2 )}

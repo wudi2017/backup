@@ -1,0 +1,55 @@
+{\rtf1\ansi\ansicpg936\cocoartf1561\cocoasubrtf400
+{\fonttbl\f0\fnil\fcharset0 AndaleMono;}
+{\colortbl;\red255\green255\blue255;\red0\green0\blue0;\red67\green67\blue67;\red251\green0\blue7;
+\red0\green0\blue255;}
+{\*\expandedcolortbl;;\csgray\c0;\csgray\c33333;\cssrgb\c100000\c0\c0;
+\cssrgb\c0\c0\c100000;}
+\paperw11900\paperh16840\margl1440\margr1440\vieww26620\viewh15180\viewkind0
+\pard\tx560\tx1120\tx1680\tx2240\tx2800\tx3360\tx3920\tx4480\tx5040\tx5600\tx6160\tx6720\slleading20\pardirnatural\partightenfactor0
+
+\f0\fs24 \cf2 log(\cf3 "start1"\cf2 )\
+\pard\tx560\tx1120\tx1680\tx2240\tx2800\tx3360\tx3920\tx4480\tx5040\tx5600\tx6160\tx6720\pardirnatural\partightenfactor0
+\cf4 //coscript.setShouldKeepAround(true);\cf2 \
+\pard\tx560\tx1120\tx1680\tx2240\tx2800\tx3360\tx3920\tx4480\tx5040\tx5600\tx6160\tx6720\slleading20\pardirnatural\partightenfactor0
+\
+\pard\tx560\tx1120\tx1680\tx2240\tx2800\tx3360\tx3920\tx4480\tx5040\tx5600\tx6160\tx6720\slleading20\pardirnatural\partightenfactor0
+\cf5 var\cf2  identifier = \cf3 "myToolbarThread"\cf2 ;\
+\cf5 var\cf2  threadDictionary = NSThread.mainThread().threadDictionary();\
+\cf5 var\cf2  Toolbar = threadDictionary[identifier];\
+Toolbar = NSPanel.alloc().init();\
+\cf4 //Toolbar.setStyleMask(NSTitledWindowMask + NSFullSizeContentViewWindowMask);\cf2 \
+Toolbar.setBackgroundColor(NSColor.colorWithRed_green_blue_alpha(\cf5 0.9\cf2 , \cf5 0.9\cf2 , \cf5 0.9\cf2 , \cf5 1\cf2 ));\
+\cf4 //Toolbar.setTitleVisibility(NSWindowTitleHidden);\cf2 \
+Toolbar.setTitlebarAppearsTransparent(\cf5 true\cf2 );\
+Toolbar.setFrame_display(NSMakeRect(\cf5 0\cf2 , \cf5 0\cf2 , \cf5 800\cf2 , \cf5 480\cf2 ), \cf5 false\cf2 );\
+Toolbar.setMovableByWindowBackground(\cf5 true\cf2 );\
+Toolbar.becomeKeyWindow();\
+Toolbar.setLevel(NSFloatingWindowLevel);\
+\cf5 var\cf2  contentView = Toolbar.contentView();\
+context.document.showMessage(\cf3 'Start'\cf2 )   \
+\
+// NSColor.colorWithDeviceRed_green_blue_alpha(\cf5 0.9\cf2 ,\cf5 0.9\cf2 ,\cf5 0.9\cf2 ,\cf5 1\cf2 )\
+// CGColorCreateGenericRGB(\cf5 0.8\cf2 ,\'a0\cf5 0.0\cf2 ,\'a0\cf5 0.0\cf2 ,\'a0\cf5 1\cf2 )\
+\
+\cf5 var\cf2  viewA = NSView.alloc().init();\
+viewA.frame = NSMakeRect(\cf5 0\cf2 , \cf5 0\cf2 , \cf5 600\cf2 , \cf5 300\cf2 );\
+viewA.setWantsLayer(\cf5 true\cf2 );\
+\cf5 var\cf2  viewALayer = CALayer.layer();\
+viewALayer.setBackgroundColor(CGColorCreateGenericRGB(\cf5 0.8\cf2 ,\'a0\cf5 0.0\cf2 ,\'a0\cf5 0.0\cf2 ,\'a0\cf5 1\cf2 ));\
+viewA.setLayer(viewALayer);\
+viewA.alphaValue = \cf5 1\cf2 ;                          \
+contentView.addSubview(viewA);\
+        \
+\cf5 var\cf2  viewB = NSView.alloc().init();\
+viewB.frame = NSMakeRect(\cf5 100\cf2 , \cf5 100\cf2 , \cf5 650\cf2 , \cf5 350\cf2 );\
+viewB.setWantsLayer(\cf5 true\cf2 );\
+\cf5 var\cf2  viewBLayer = CALayer.layer();\
+viewBLayer.setBackgroundColor(CGColorCreateGenericRGB(\cf5 0.0\cf2 ,\'a0\cf5 0.8\cf2 ,\'a0\cf5 0.0\cf2 ,\'a0\cf5 0.2\cf2 ));\
+viewB.setLayer(viewBLayer);\
+contentView.addSubview(viewB);\
+\
+threadDictionary[identifier] = Toolbar;\
+Toolbar.center();\
+Toolbar.makeKeyAndOrderFront(\cf5 nil\cf2 );\
+\
+log(\cf3 "over"\cf2 )}

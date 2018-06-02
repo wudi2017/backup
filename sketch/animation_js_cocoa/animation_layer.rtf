@@ -1,0 +1,278 @@
+{\rtf1\ansi\ansicpg936\cocoartf1561\cocoasubrtf400
+{\fonttbl\f0\fnil\fcharset0 AndaleMono;}
+{\colortbl;\red255\green255\blue255;\red0\green0\blue0;\red67\green67\blue67;\red251\green0\blue7;
+\red0\green0\blue255;}
+{\*\expandedcolortbl;;\csgray\c0;\csgray\c33333;\cssrgb\c100000\c0\c0;
+\cssrgb\c0\c0\c100000;}
+\paperw11900\paperh16840\margl1440\margr1440\vieww28780\viewh15660\viewkind0
+\pard\tx560\tx1120\tx1680\tx2240\tx2800\tx3360\tx3920\tx4480\tx5040\tx5600\tx6160\tx6720\slleading20\pardirnatural\partightenfactor0
+
+\f0\fs24 \cf2 log(\cf3 "start"\cf2 )\
+\cf4 //coscript.setShouldKeepAround(true);\cf2 \
+\'a0\
+\cf5 var\cf2  identifier = \cf3 "myToolbarThread"\cf2 ;\
+\cf5 var\cf2  threadDictionary = NSThread.mainThread().threadDictionary();\
+\cf5 var\cf2  Toolbar = threadDictionary[identifier];\
+Toolbar = NSPanel.alloc().init();\
+Toolbar.setBackgroundColor(NSColor.colorWithRed_green_blue_alpha(\cf5 0.9\cf2 , \cf5 0.9\cf2 , \cf5 0.9\cf2 , \cf5 1\cf2 ));\
+Toolbar.setTitlebarAppearsTransparent(\cf5 true\cf2 );\
+Toolbar.setFrame_display(NSMakeRect(\cf5 0\cf2 , \cf5 0\cf2 , \cf5 1280\cf2 , \cf5 720\cf2 ), \cf5 false\cf2 );\
+Toolbar.setMovableByWindowBackground(\cf5 true\cf2 );\
+Toolbar.becomeKeyWindow();\
+Toolbar.setLevel(NSFloatingWindowLevel);\
+\cf5 var\cf2  contentView = Toolbar.contentView();\
+contentView.setWantsLayer(\cf5 true\cf2 ) \cf4 // !!!!!!!!!!!!!!!!!!!!!!!!!!!!!\cf2 \
+context.document.showMessage(\cf3 'Start'\cf2 )\'a0\'a0\
+\'a0\
+\cf4 ////////////////////////////////////////////////////////////////////////////////////////////\cf2 \
+\cf4 // https://developer.apple.com/library/content/documentation/Cocoa/Conceptual/CoreAnimation_guide/CreatingBasicAnimations/CreatingBasicAnimations.html#//apple_ref/doc/uid/TP40004514-CH3-SW1\cf2 \
+\cf4 //\cf2 \
+\cf4 // rotate + alpha\cf2 \
+\{\
+    \cf5 var\cf2  viewA = NSView.alloc().init();\
+    viewA.setFrame(NSMakeRect(\cf5 100\cf2 , \cf5 100\cf2 , \cf5 100\cf2 , \cf5 100\cf2 ));\
+    viewA.alphaValue = \cf5 1\cf2 ;\
+    viewA.setWantsLayer(\cf5 true\cf2 );\
+    \cf5 var\cf2  viewALayer = CALayer.alloc().init();\
+    contentView.addSubview(viewA);\
+    viewA.setLayer(viewALayer);\
+    viewALayer.setBackgroundColor(CGColorCreateGenericRGB(\cf5 0.8\cf2 ,\'a0\cf5 0.0\cf2 ,\'a0\cf5 0.0\cf2 ,\'a0\cf5 1\cf2 ));\
+    viewALayer.setAnchorPoint(CGPointMake(\cf5 0.5\cf2 , \cf5 0.5\cf2 ));\
+\
+    \cf4 // rotation\cf2 \
+    \cf5 var\cf2  animation = CABasicAnimation.animationWithKeyPath(@\cf3 "transform.rotation.z"\cf2 );\'a0\
+    animation.setFromValue(\cf5 0.0\cf2 )\
+    animation.setToValue(\cf5 -3.14\cf2 *\cf5 2\cf2 )\
+    animation.setDuration(\cf5 1\cf2 )\
+    \cf4 //animation.autoreverses = false;\'a0\cf2 \
+    animation.setCumulative(\cf5 true\cf2 )\
+    \cf4 //\'a0animation.fillMode = kCAFillModeForwards;\'a0\cf2 \
+    animation.setRepeatCount(\cf5 1000\cf2 );\'a0\
+\
+    \cf4 // opacity \cf2 \
+    \cf5 var\cf2  animation1 = CABasicAnimation.animationWithKeyPath(@\cf3 "opacity"\cf2 )\
+    animation1.fromValue = \cf5 1.0\cf2 ;\
+    animation1.toValue = \cf5 0.0\cf2 ;\
+    animation1.autoreverses =\'a0 \cf5 true\cf2  ;\
+    animation1.duration = \cf5 5\cf2 ;\
+    animation1.repeatCount =\'a0 \cf5 20\cf2  ;\
+    \cf4 // // animation.removedOnCompletion\'a0 = NO ;\cf2 \
+    \cf4 // // animation.fillMode\'a0 = kCAFillModeForwards\'a0 ;\cf2 \
+    \cf4 // opacit end\cf2 \
+\
+\cf4 //     log("----------------------viewALayer.bounds----------------")\cf2 \
+\cf4 //     log(viewALayer.bounds())\cf2 \
+\cf4 //     log("----------------------viewALayer.anchorPoint----------------")\cf2 \
+\cf4 //     log(viewALayer.anchorPoint())\cf2 \
+\cf4 //     log("----------------------viewALayer.position----------------")\cf2 \
+\cf4 //     log(viewALayer.position())\cf2 \
+\cf4 //     log("----------------------viewALayer.frame----------------")\cf2 \
+\cf4 //     log(viewALayer.frame())\cf2 \
+\
+    \cf4 // 1 call alls\cf2 \
+\cf4 //     viewALayer.addAnimation_forKey(animation, nil);\cf2 \
+\cf4 //     viewALayer.addAnimation_forKey(animation1, nil);\cf2 \
+\
+\
+    \cf4 // Animation group\cf2 \
+    animationgroup = CAAnimationGroup.animation();\
+    \cf4 //array = NSArray.array()\cf2 \
+    \cf4 //array = NSArray.arrayWithObject(animation)\cf2 \
+    array = \cf5 new\cf2  Array()\
+    array.push(animation)\
+    array.push(animation1)\
+    animationgroup.setAnimations(array) \cf4 // or\cf2 \
+    animationgroup.animations = [animation,animation1]\
+    animationgroup.setDuration(\cf5 5\cf2 )\
+    animationgroup.setRepeatCount(\cf5 1000\cf2 );\'a0\
+    viewALayer.addAnimation_forKey(animationgroup, \cf5 nil\cf2 )\
+\}\
+\
+\cf4 // scale\cf2 \
+\{\
+    \cf5 var\cf2  viewA = NSView.alloc().init();\
+    viewA.setFrame(NSMakeRect(\cf5 300\cf2 , \cf5 100\cf2 , \cf5 100\cf2 , \cf5 100\cf2 ));\
+    viewA.alphaValue = \cf5 1\cf2 ;\
+    viewA.setWantsLayer(\cf5 true\cf2 );\
+    \cf5 var\cf2  viewALayer = CALayer.alloc().init();\
+    contentView.addSubview(viewA);\
+    viewA.setLayer(viewALayer);\
+    viewALayer.setBackgroundColor(CGColorCreateGenericRGB(\cf5 0.0\cf2 ,\'a0\cf5 0.8\cf2 ,\'a0\cf5 0.0\cf2 ,\'a0\cf5 1\cf2 ));\
+    viewALayer.setAnchorPoint(CGPointMake(\cf5 0.5\cf2 , \cf5 0.5\cf2 ));\
+\
+    \cf4 // scale\cf2 \
+    \cf5 var\cf2  animation = CABasicAnimation.animationWithKeyPath(@\cf3 "transform.scale"\cf2 );\'a0\
+    animation.setFromValue(NSNumber.numberWithFloat(\cf5 0.0\cf2 ));\
+    animation.setToValue(NSNumber.numberWithFloat(\cf5 1.0\cf2 ));\
+    animation.setDuration(\cf5 1\cf2 )\
+    animation.setRepeatCount(\cf5 1000\cf2 );\'a0\
+\
+    viewALayer.addAnimation_forKey(animation, \cf5 nil\cf2 );\
+    \cf4 //viewBLayer.addAnimation_forKey(animation1, nil);\cf2 \
+\
+\}\
+\
+\cf4 // position\cf2 \
+\{\
+    \cf5 var\cf2  viewA = NSView.alloc().init();\
+    viewA.setFrame(NSMakeRect(\cf5 500\cf2 , \cf5 100\cf2 , \cf5 100\cf2 , \cf5 100\cf2 ));\
+    viewA.alphaValue = \cf5 1\cf2 ;\
+    viewA.setWantsLayer(\cf5 true\cf2 );\
+    \cf5 var\cf2  viewALayer = CALayer.alloc().init();\
+    contentView.addSubview(viewA);\
+    viewA.setLayer(viewALayer);\
+    viewALayer.setBackgroundColor(CGColorCreateGenericRGB(\cf5 0.0\cf2 ,\'a0\cf5 0.0\cf2 ,\'a0\cf5 0.8\cf2 ,\'a0\cf5 1\cf2 ));\
+    viewALayer.setAnchorPoint(CGPointMake(\cf5 0.5\cf2 , \cf5 0.5\cf2 ));\
+\
+    \cf5 var\cf2  animation = CAKeyframeAnimation.animationWithKeyPath(@\cf3 "position"\cf2 );\'a0\
+    \cf5 var\cf2  thePath=CGPathCreateMutable()\
+\
+    CGPathMoveToPoint(thePath,\cf5 nil\cf2 ,\cf5 500.0\cf2 ,\cf5 100.0\cf2 );\
+    CGPathAddLineToPoint(thePath,\cf5 nil\cf2 ,\cf5 400.0\cf2 ,\cf5 100.0\cf2 );\
+    CGPathAddLineToPoint(thePath,\cf5 nil\cf2 ,\cf5 0.0\cf2 ,\cf5 100.0\cf2 );\
+    CGPathAddCurveToPoint(thePath,\cf5 nil\cf2 ,\cf5 74.0\cf2 ,\cf5 500.0\cf2 ,\
+                                   \cf5 320.0\cf2 ,\cf5 500.0\cf2 ,\
+                                   \cf5 320.0\cf2 ,\cf5 74.0\cf2 );\
+    CGPathAddCurveToPoint(thePath,\cf5 nil\cf2 ,\cf5 320.0\cf2 ,\cf5 500.0\cf2 ,\
+                                   \cf5 566.0\cf2 ,\cf5 500.0\cf2 ,\
+                                   \cf5 566.0\cf2 ,\cf5 74.0\cf2 );\
+\
+CGPathMoveToPoint(thePath,\cf5 nil\cf2 ,\cf5 0.0\cf2 ,\cf5 100.0\cf2 );\
+CGPathAddLineToPoint(thePath,\cf5 nil\cf2 ,\cf5 20.0\cf2 ,\cf5 100.0\cf2 );\
+CGPathAddLineToPoint(thePath,\cf5 nil\cf2 ,\cf5 80.0\cf2 ,\cf5 100.0\cf2 );\
+CGPathAddLineToPoint(thePath,\cf5 nil\cf2 ,\cf5 140.0\cf2 ,\cf5 100.0\cf2 );\
+CGPathAddLineToPoint(thePath,\cf5 nil\cf2 ,\cf5 220.0\cf2 ,\cf5 100.0\cf2 );\
+CGPathAddLineToPoint(thePath,\cf5 nil\cf2 ,\cf5 320.0\cf2 ,\cf5 100.0\cf2 );\
+CGPathAddLineToPoint(thePath,\cf5 nil\cf2 ,\cf5 440.0\cf2 ,\cf5 100.0\cf2 );\
+CGPathAddLineToPoint(thePath,\cf5 nil\cf2 ,\cf5 580.0\cf2 ,\cf5 100.0\cf2 );\
+CGPathAddLineToPoint(thePath,\cf5 nil\cf2 ,\cf5 740.0\cf2 ,\cf5 100.0\cf2 );\
+CGPathAddLineToPoint(thePath,\cf5 nil\cf2 ,\cf5 920.0\cf2 ,\cf5 100.0\cf2 );\
+CGPathAddLineToPoint(thePath,\cf5 nil\cf2 ,\cf5 1120.0\cf2 ,\cf5 100.0\cf2 );\
+\
+\
+    animation.path=thePath;\
+    \cf4 //animation.setFromValue(viewALayer.valueForKey(@"position"));\cf2 \
+    \cf4 //animation.setToValue(CGPointMake(100, 100));\cf2 \
+    animation.setDuration(\cf5 2\cf2 )\'a0\
+    animation.setRepeatCount(\cf5 1000\cf2 );\'a0\
+\
+\
+    \cf4 // opacity \cf2 \
+    \cf5 var\cf2  animation1 = CABasicAnimation.animationWithKeyPath(@\cf3 "opacity"\cf2 )\
+    animation1.fromValue = \cf5 1.0\cf2 ;\
+    animation1.toValue = \cf5 0.0\cf2 ;\
+    animation1.autoreverses =\'a0 \cf5 true\cf2  ;\
+    animation1.duration = \cf5 1\cf2 ;\
+    animation1.repeatCount =\'a0 \cf5 20\cf2  ;\
+\
+    viewALayer.addAnimation_forKey(animation, \cf5 nil\cf2 );\
+    viewALayer.addAnimation_forKey(animation1, \cf5 nil\cf2 );\
+\
+\
+\}\
+\
+\cf4 // border property\cf2 \
+\{\
+    \cf5 var\cf2  viewA = NSView.alloc().init();\
+    viewA.setFrame(NSMakeRect(\cf5 700\cf2 , \cf5 100\cf2 , \cf5 100\cf2 , \cf5 100\cf2 ));\
+    viewA.alphaValue = \cf5 1\cf2 ;\
+    viewA.setWantsLayer(\cf5 true\cf2 );\
+    \cf5 var\cf2  viewALayer = CALayer.alloc().init();\
+    contentView.addSubview(viewA);\
+    viewA.setLayer(viewALayer);\
+    viewALayer.setBackgroundColor(CGColorCreateGenericRGB(\cf5 0.8\cf2 ,\'a0\cf5 0.8\cf2 ,\'a0\cf5 0.0\cf2 ,\'a0\cf5 1\cf2 ));\
+    viewALayer.setAnchorPoint(CGPointMake(\cf5 0.5\cf2 , \cf5 0.5\cf2 ));\
+    viewALayer.setBorderColor(NSColor.redColor().CGColor())\
+    viewALayer.setBorderWidth(\cf5 30\cf2 )\
+\
+\
+    widthAnim = CAKeyframeAnimation.animationWithKeyPath(\cf3 "borderWidth"\cf2 );\
+    widthValues = \cf5 new\cf2  Array()\
+    widthValues.push(\cf5 1\cf2 )\
+    widthValues.push(\cf5 30\cf2 )\
+    widthAnim.values = widthValues\
+    \cf4 //widthAnim.calculationMode = kCAAnimationPaced;\cf2 \
+\
+    colorAnim = CAKeyframeAnimation.animationWithKeyPath(\cf3 "borderColor"\cf2 );\
+    colorAnimValues = \cf5 new\cf2  Array()\
+    colorAnimValues.push(NSColor.redColor().CGColor())\
+    colorAnimValues.push(NSColor.greenColor().CGColor())\
+    colorAnimValues.push(NSColor.blueColor().CGColor())\
+    colorAnimValues.push(\cf5 nil\cf2 )\
+    colorAnim.setValues(colorAnimValues)\
+    log(colorAnimValues)\
+\
+    animationgroup = CAAnimationGroup.animation();\
+    array = \cf5 new\cf2  Array()\
+    array.push(widthAnim)\
+    array.push(colorAnim)\
+    animationgroup.setAnimations(array)\
+    animationgroup.setDuration(\cf5 1\cf2 )\
+    animationgroup.setRepeatCount(\cf5 1000\cf2 );\'a0\
+    viewALayer.addAnimation_forKey(animationgroup, \cf3 "BorderChanges"\cf2 )\
+\}\
+\
+\cf4 // frame\cf2 \
+\{\
+    \cf5 var\cf2  viewA = NSView.alloc().init();\
+    viewA.setFrame(NSMakeRect(\cf5 900\cf2 , \cf5 100\cf2 , \cf5 10\cf2 , \cf5 10\cf2 ));\
+    viewA.alphaValue = \cf5 1\cf2 ;\
+    viewA.setWantsLayer(\cf5 true\cf2 );\
+    \cf5 var\cf2  viewALayer = CALayer.alloc().init();\
+    contentView.addSubview(viewA);\
+    viewA.setLayer(viewALayer);\
+    viewALayer.setBackgroundColor(CGColorCreateGenericRGB(\cf5 0.0\cf2 ,\'a0\cf5 0.8\cf2 ,\'a0\cf5 0.8\cf2 ,\'a0\cf5 1\cf2 ));\
+    \cf4 //viewALayer.setAnchorPoint(CGPointMake(0.5, 0.5));\cf2 \
+\
+\
+    \cf5 var\cf2  fromRect=NSMakeRect(\cf5 900\cf2 , \cf5 100\cf2 , \cf5 100\cf2 , \cf5 100\cf2 )\
+    \cf5 var\cf2  toRect=NSMakeRect(\cf5 1000\cf2 , \cf5 100\cf2 , \cf5 200\cf2 , \cf5 100\cf2 )\
+    fmAnimPos = CAKeyframeAnimation.animationWithKeyPath(@\cf3 "position"\cf2 );\'a0\
+        \cf5 var\cf2  thePath=CGPathCreateMutable()\
+        CGPathMoveToPoint(thePath,\cf5 nil\cf2 ,fromRect.origin.x,fromRect.origin.y);\
+        CGPathAddLineToPoint(thePath,\cf5 nil\cf2 ,toRect.origin.x,toRect.origin.y);\
+    fmAnimPos.path=thePath;\
+\pard\tx560\tx1120\tx1680\tx2240\tx2800\tx3360\tx3920\tx4480\tx5040\tx5600\tx6160\tx6720\pardirnatural\partightenfactor0
+\cf2 \
+    fmAnimSizeW = CAKeyframeAnimation.animationWithKeyPath(\cf3 "bounds.size.width"\cf2 );\
+    arrayValues = \cf5 new\cf2  Array()\
+    arrayValues.push(\cf5 10\cf2 )\
+    arrayValues.push(\cf5 20\cf2 )\
+    arrayValues.push(\cf5 50\cf2 )\
+    arrayValues.push(\cf5 100\cf2 )\
+    arrayValues.push(\cf5 200\cf2 )\
+    fmAnimSizeW.setValues(arrayValues)\
+    fmAnimSizeH = CAKeyframeAnimation.animationWithKeyPath(\cf3 "bounds.size.height"\cf2 );\
+    arrayValues = \cf5 new\cf2  Array()\
+    arrayValues.push(\cf5 10\cf2 )\
+    arrayValues.push(\cf5 20\cf2 )\
+    arrayValues.push(\cf5 50\cf2 )\
+    arrayValues.push(\cf5 100\cf2 )\
+    arrayValues.push(\cf5 200\cf2 )\
+    fmAnimSizeH.setValues(arrayValues)\
+\
+\
+\pard\tx560\tx1120\tx1680\tx2240\tx2800\tx3360\tx3920\tx4480\tx5040\tx5600\tx6160\tx6720\slleading20\pardirnatural\partightenfactor0
+\cf4 //     fmAnimW = CABasicAnimation.animationWithKeyPath("bounds.size.width");\cf2 \
+\cf4 //     fmAnimW.setFromValue(fromRect.size.width)\cf2 \
+\cf4 //     fmAnimW.setToValue(toRect.size.width)\cf2 \
+\cf4 //     fmAnimH = CABasicAnimation.animationWithKeyPath("bounds.size.height");\cf2 \
+\cf4 //     fmAnimH.setFromValue(fromRect.size.height)\cf2 \
+\cf4 //     fmAnimH.setToValue(toRect.size.height)\cf2 \
+    \cf4 //group\cf2 \
+    animationgroup = CAAnimationGroup.animation();\
+    animationgroup.animations=[fmAnimPos,fmAnimSizeW,fmAnimSizeH]\
+    animationgroup.setDuration(\cf5 2\cf2 )\
+    animationgroup.setRepeatCount(\cf5 1000\cf2 );\'a0\
+    viewALayer.addAnimation_forKey(animationgroup, \cf5 nil\cf2 )\
+\}\
+\
+\
+\cf4 ////////////////////////////////////////////////////////////////////////////////////////\cf2 \
+\
+threadDictionary[identifier] = Toolbar;\
+Toolbar.center();\
+Toolbar.makeKeyAndOrderFront(\cf5 nil\cf2 );\
+\'a0\
+log(\cf3 "over"\cf2 )\
+}
