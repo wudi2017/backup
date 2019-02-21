@@ -1,0 +1,158 @@
+{\rtf1\ansi\ansicpg936\cocoartf1561\cocoasubrtf400
+{\fonttbl\f0\fnil\fcharset0 AndaleMono;}
+{\colortbl;\red255\green255\blue255;\red0\green0\blue255;\red0\green0\blue0;\red251\green0\blue7;
+\red67\green67\blue67;}
+{\*\expandedcolortbl;;\cssrgb\c0\c0\c100000;\csgray\c0;\cssrgb\c100000\c0\c0;
+\csgray\c33333;}
+\paperw11900\paperh16840\margl1440\margr1440\vieww29360\viewh14060\viewkind0
+\pard\tx560\tx1120\tx1680\tx2240\tx2800\tx3360\tx3920\tx4480\tx5040\tx5600\tx6160\tx6720\pardirnatural\partightenfactor0
+
+\f0\fs24 \cf2 function\cf3  SLOGDelete()\
+\{\
+    \cf4 // generate log path\cf3 \
+    \cf2 var\cf3  homeDir = NSHomeDirectory();\
+    \cf2 var\cf3  logFileFullName = homeDir + \cf5 "/sketchplugin_log.txt"\cf3 \
+\
+    \cf4 // delete file\cf3 \
+    \cf2 var\cf3  fileManager = [NSFileManager defaultManager];\
+    fileManager.removeItemAtPath_error(logFileFullName, \cf2 nil\cf3 );\
+\}\
+\cf2 function\cf3  SLOG(logstr)\
+\{\
+    \cf2 var\cf3  nsStrLog = NSString.alloc().initWithString(logstr);\
+    nsStrLog = nsStrLog.stringByAppendingFormat(\cf5 "\\n"\cf3 );\
+\
+    \cf2 var\cf3  homeDir = NSHomeDirectory();\
+    \cf2 var\cf3  logFileFullName = homeDir + \cf5 "/sketchplugin_log.txt"\cf3 \
+    \cf4 //log(logFileFullName)\cf3 \
+\
+    \cf2 var\cf3  filehandle = NSFileHandle.fileHandleForWritingAtPath(logFileFullName)\
+    \cf2 if\cf3 (filehandle)\
+    \{\
+        filehandle.truncateFileAtOffset(filehandle.seekToEndOfFile());\
+        \cf2 var\cf3  nsdata\'a0= nsStrLog.dataUsingEncoding(NSUTF8StringEncoding);\
+        filehandle.writeData(nsdata)\
+    \}\
+    \cf2 else\cf3 \
+    \{\
+        nsStrLog.writeToFile_atomically(logFileFullName, \cf2 true\cf3 );\
+    \}\
+\}\
+\cf2 function\cf3  run_cmd(cmd)\
+\{\
+    cmdlines = cmd.split(\cf5 " "\cf3 )\
+    exec = \cf5 ""\cf3 \
+    arguments = Array()\
+    \cf2 for\cf3  (\cf2 var\cf3  i=\cf2 0\cf3 ; i<cmdlines.length; i++)\
+    \{\
+        \cf2 if\cf3 (i == \cf2 0\cf3 )\
+        \{\
+            exec = cmdlines[i];\
+        \}\
+        \cf2 else\cf3 \
+        \{\
+            arguments.push(cmdlines[i])\
+        \}\
+    \}\
+    \cf4 //log("--exec:" + exec)\cf3 \
+    \cf4 //log("--arguments:" + arguments)\cf3 \
+\
+    launchPath = \cf5 ""\cf3 \
+    \{\
+        taskFindLaunchPath = [[NSTask alloc] init];\
+        [taskFindLaunchPath setLaunchPath: @\cf5 "/usr/bin/which"\cf3 ];\
+        argumentsInner = Array() \
+        argumentsInner.push(exec)\
+        [taskFindLaunchPath setArguments: argumentsInner];\
+        pipeInner = [NSPipe pipe];\
+        [taskFindLaunchPath setStandardOutput: pipeInner];\
+        fileInner = [pipeInner fileHandleForReading]\
+        [taskFindLaunchPath launch];\
+        dataInner = [fileInner readDataToEndOfFile]\
+        retdataInner = [[NSString alloc] initWithData: dataInner encoding: NSUTF8StringEncoding]\
+        launchPath = retdataInner.trim()\
+    \}\
+    \cf4 //log("--launchPath:" + launchPath)\cf3 \
+    \
+    task = [[NSTask alloc] init];\
+    [task setLaunchPath: launchPath];\
+    [task setArguments: arguments];\
+    pipe = [NSPipe pipe];\
+    [task setStandardOutput: pipe];\
+    file = [pipe fileHandleForReading]\
+    [task launch];\
+    data = [file readDataToEndOfFile]\
+    retdata = [[NSString alloc] initWithData: data encoding: NSUTF8StringEncoding]\
+    \cf2 return\cf3  retdata;\
+\}\
+\cf2 function\cf3  savePanelRun(datadir)\
+\{\
+    SLOG(\cf5 "savePanelRun:"\cf3  + datadir)\
+    savePanel = NSSavePanel.savePanel();\
+    savePanel.setMessage(@\cf5 "select a save file"\cf3 );\
+    fileTypes = \cf2 new\cf3  Array();\
+    fileTypes.push(\cf5 "spv"\cf3 )\
+    savePanel.setAllowedFileTypes(fileTypes);\
+    runResult = savePanel.runModal()\
+    \cf2 if\cf3 (NSOKButton = runResult)\
+    \{\
+        savePath = [[savePanel filename] retain]; \
+        SLOG(\cf5 "spvPath:"\cf3  + savePath)\
+        \cf4 //context.document.showMessage(savePath)\'a0\'a0\cf3 \
+        run_cmd(\cf5 \'93zip -r \'94 + \cf3 savePath + \'93 \'93 + datadir)\
+    \}\
+\}\
+\
+SLOGDelete()\
+\
+\
+log(\cf5 "start"\cf3 )\
+coscript.setShouldKeepAround(\cf2 true\cf3 );\
+\'a0\
+\cf2 var\cf3  identifier = \cf5 "myToolbarThread"\cf3 ;\
+\cf2 var\cf3  threadDictionary = NSThread.mainThread().threadDictionary();\
+\cf2 var\cf3  Toolbar = threadDictionary[identifier];\
+Toolbar = NSPanel.alloc().init();\
+Toolbar.setBackgroundColor(NSColor.colorWithRed_green_blue_alpha(\cf2 0.9\cf3 , \cf2 0.9\cf3 , \cf2 0.9\cf3 , \cf2 1\cf3 ));\
+Toolbar.setTitlebarAppearsTransparent(\cf2 true\cf3 );\
+Toolbar.setFrame_display(NSMakeRect(\cf2 0\cf3 , \cf2 0\cf3 , \cf2 1280\cf3 , \cf2 720\cf3 ), \cf2 false\cf3 );\
+Toolbar.setMovableByWindowBackground(\cf2 true\cf3 );\
+Toolbar.becomeKeyWindow();\
+Toolbar.setLevel(NSFloatingWindowLevel);\
+\cf2 var\cf3  contentView = Toolbar.contentView();\
+contentView.setWantsLayer(\cf2 true\cf3 ) \cf4 // !!!!!!!!!!!!!!!!!!!!!!!!!!!!!\cf3 \
+context.document.showMessage(\cf5 'Start'\cf3 )\'a0\'a0\
+\
+\
+\cf4 ///////////////////////////////////////////////////////////////////////////\cf3 \
+\cf4 // button1\cf3 \
+\cf2 var\cf3  button1 = NSButton.alloc().initWithFrame(NSMakeRect(\cf2 0\cf3 , \cf2 0\cf3 , \cf2 80\cf3 , \cf2 20\cf3 ));\
+button1.setAttributedTitle(\cf5 "button1"\cf3 );\
+button1.setBordered(\cf2 true\cf3 );\
+button1.sizeToFit();\
+button1.setCOSJSTargetFunction(\cf2 function\cf3 (sender)\{\
+        context.document.showMessage(\cf5 'button1'\cf3 )\
+        savePanelRun(\cf5 "/Users/navibase/sketch-iauto/test"\cf3 );\
+    \});\
+contentView.addSubview(button1);\
+\
+\cf4 // var openPanel = NSOpenPanel.openPanel()\cf3 \
+\cf4 // openPanel.setCanChooseDirectories(false)\cf3 \
+\cf4 // openPanel.setCanChooseFiles(true)\cf3 \
+\cf4 // openPanel.setCanCreateDirectories(false)\cf3 \
+\cf4 // openPanel.setDirectoryURL(NSURL.fileURLWithPath('~/Documents/'))\cf3 \
+\cf4 // \cf3 \
+\cf4 // openPanel.setTitle('Choose a file')\cf3 \
+\cf4 // openPanel.setPrompt('Choose')\cf3 \
+\cf4 // openPanel.runModal()\cf3 \
+\cf4 // \cf3 \
+\cf4 // log(openPanel.filenames())\cf3 \
+\
+\
+\
+threadDictionary[identifier] = Toolbar;\
+Toolbar.center();\
+Toolbar.makeKeyAndOrderFront(\cf2 nil\cf3 );\
+\'a0\
+log(\cf5 "over"\cf3 )\
+}

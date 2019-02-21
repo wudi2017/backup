@@ -1,0 +1,191 @@
+{\rtf1\ansi\ansicpg936\cocoartf1561\cocoasubrtf400
+{\fonttbl\f0\fnil\fcharset0 AndaleMono;}
+{\colortbl;\red255\green255\blue255;\red0\green0\blue0;\red0\green0\blue255;\red67\green67\blue67;
+\red251\green0\blue7;}
+{\*\expandedcolortbl;;\csgray\c0;\cssrgb\c0\c0\c100000;\csgray\c33333;
+\cssrgb\c100000\c0\c0;}
+\paperw11900\paperh16840\margl1440\margr1440\vieww32040\viewh14060\viewkind0
+\pard\tx560\tx1120\tx1680\tx2240\tx2800\tx3360\tx3920\tx4480\tx5040\tx5600\tx6160\tx6720\slleading20\pardirnatural\partightenfactor0
+
+\f0\fs24 \cf2 @\cf3 import\cf2  \cf4 '/Users/navibase/sketch-iauto/sketchplugin/sketchiauto2.sketchplugin/Contents/Sketch/iautolib.js'\cf2 \
+@\cf3 import\cf2  \cf4 '/Users/navibase/sketch-iauto/sketchplugin/sketchiauto2.sketchplugin/Contents/Sketch/libJSonDB/iautoJsonDb.js'\cf2 \
+@\cf3 import\cf2  \cf4 '/Users/navibase/sketch-iauto/sketchplugin/sketchiauto2.sketchplugin/Contents/Sketch/libJSonDB/iautoJsonDbIF.js'\cf2 \
+\
+\cf5 // updateArtboardToPage("2512512341241234", "USB001_01", "page1")\cf2 \
+\cf5 // artBoardInSPList = getPageInfoByArtBoardID("2512512341241234")\cf2 \
+\cf5 // if(artBoardInSPList.length > 0)\cf2 \
+\cf5 // \{\cf2 \
+\cf5 //     var inScreenID = artBoardInSPList[0].ScreenID;\cf2 \
+\cf5 //     var inPageID = artBoardInSPList[0].PageID;\cf2 \
+\cf5 //     log(inScreenID)\cf2 \
+\cf5 //     log(inPageID)\cf2 \
+\cf5 // \}\cf2 \
+\
+\cf5 // jobj = \{\}\cf2 \
+\cf5 // jobj["x"] = "x"\cf2 \
+\cf5 // log(jobj)\cf2 \
+\cf5 // var jsonText = JSON.stringify(jobj);\cf2 \
+\cf5 // log(jsonText)\cf2 \
+\
+\cf5 // var filehandle = NSFileHandle.fileHandleForWritingAtPath("/Users/navibase/a.txt")\cf2 \
+\cf5 // var nsJsonText = [NSString  stringWithUTF8String:jsonText];\cf2 \
+\cf5 // nsJsonText.writeToFile_atomically("/Users/navibase/a.txt", true);\cf2 \
+\
+\cf5 // setMemProperty("x", "y")\cf2 \
+\cf5 // log(getMemProperty("x"))\cf2 \
+\cf5 // log(getMemProperty("x1"))\cf2 \
+log(getBMemProperty(\cf4 "keyX"\cf2 ))\
+setBMemProperty(\cf4 "keyX"\cf2 ,\cf4 "1"\cf2 )\
+setBMemProperty(\cf4 "keyY"\cf2 ,\cf4 "2"\cf2 )\
+setBMemProperty(\cf4 "keyX"\cf2 ,\cf4 "3"\cf2 )\
+log(getBMemProperty(\cf4 "keyX"\cf2 ))\
+\
+\
+\cf5 // \cf2 \
+\cf5 // log(getSketchIAutoPluginDocumentDir())\cf2 \
+\cf5 // SLOG("x")\cf2 \
+\cf5 // SLOGDelete()\cf2 \
+\
+\cf5 // artboardID=""\cf2 \
+\cf5 // screenID=nil\cf2 \
+\cf5 // var allScreenIDList = getScreenIDList()\cf2 \
+\cf5 // for(i=0; i<allScreenIDList.length; i++)\cf2 \
+\cf5 // \{\cf2 \
+\cf5 //     var scrObj = readJsonByScreenID(screenID);\cf2 \
+\cf5 //     if(scrObj.hasOwnProperty("PartsInfo"))\cf2 \
+\cf5 //     \{\cf2 \
+\cf5 //         var partsInfoObj = scrObj["PartsInfo"]\cf2 \
+\cf5 //         for (var key in partsInfoObj) \{\cf2 \
+\cf5 //             var page = [NSString  stringWithUTF8String:key];\cf2 \
+\cf5 //             var value = partsInfoObj[key];\cf2 \
+\cf5 // \cf2 \
+\cf5 //             if (value.hasOwnProperty("parts")) \{\cf2 \
+\cf5 //                 var partsObj = value["parts"];\cf2 \
+\cf5 //             \}\cf2 \
+\cf5 //         \}\cf2 \
+\cf5 //     \}\cf2 \
+\cf5 // \}\cf2 \
+\cf5 // log(screenID)\cf2 \
+\cf5 // \cf2 \
+\cf5 // \cf2 \
+screenID = \cf4 "USB001_01"\cf2 \
+partsID = \cf4 "1_1"\cf2 \
+\cf3 var\cf2  FindPartsObj = \cf3 nil\cf2 ;\
+\
+    \cf3 var\cf2  scrObj = readJsonByScreenID(screenID);\
+    \cf3 var\cf2  FindPartsObj = \cf3 nil\cf2 ;\
+    \cf3 if\cf2 (scrObj.hasOwnProperty(\cf4 "PartsInfo"\cf2 ))\
+    \{\
+        \cf3 var\cf2  partsInfoObj = scrObj[\cf4 "PartsInfo"\cf2 ]\
+        \cf3 for\cf2  (\cf3 var\cf2  key \cf3 in\cf2  partsInfoObj) \{\
+            \cf3 var\cf2  page = [NSString  stringWithUTF8String:key];\
+            \cf3 var\cf2  value = partsInfoObj[key]\
+            \
+            \cf3 if\cf2  (value.hasOwnProperty(\cf4 "parts"\cf2 )) \{\
+                \cf3 var\cf2  partsObj = value[\cf4 "parts"\cf2 ];\
+\
+                \cf5 // find sub partsID\cf2 \
+                \cf3 for\cf2  (\cf3 var\cf2  keyParts \cf3 in\cf2  partsObj) \{\
+                    \cf3 var\cf2  curpartsID = [NSString  stringWithUTF8String:keyParts];\
+                    \cf3 if\cf2 (partsID == curpartsID)\
+                    \{\
+                        FindPartsObj = partsObj[partsID]\
+                    \}\
+                \}\
+            \};\
+        \}\
+    \}\
+\cf3 var\cf2  sPartsID = \cf4 ""\cf2 \
+\cf3 if\cf2 (FindPartsObj.hasOwnProperty(\cf4 "Parts ID"\cf2 ))\
+\{\
+    sPartsID = FindPartsObj[\cf4 "Parts ID"\cf2 ]\
+\}\
+\
+log(FindPartsObj)\
+\
+\cf5 //var allScreenIDList = getScreenIDList()\cf2 \
+\cf5 //log(allScreenIDList)\cf2 \
+\
+\cf5 // var modelData1 = [NSMutableDictionary dictionary];\cf2 \
+\cf5 //     [modelData1 setObject:@"scrID114" forKey:@"ScreenID"];\cf2 \
+\cf5 //     [modelData1 setObject:@"base_scrID113" forKey:@"BasicScreenID"];\cf2 \
+\cf5 //     [modelData1 setObject:@"scrID1-name12" forKey:@"ScreenName"];\cf2 \
+\cf5 //     [modelData1 setObject:@"xxx notes11" forKey:@"Note"];\cf2 \
+\cf5 // var view = pluginMainView.shared();\cf2 \
+\cf5 // var partsView = view.getPartsView();\cf2 \
+\cf5 // var screenInfoView = view.getScreenInfoView();\cf2 \
+\cf5 // screenInfoView.setModelData(modelData1);\cf2 \
+\
+\
+\
+\cf5 // sScreenID = scrObj["ScreenID"]\cf2 \
+\cf5 // sBasicScreenID = scrObj["BasicScreenID"]\cf2 \
+\cf5 // sName = scrObj["ScreenName"]\cf2 \
+\cf5 // sNote = scrObj["Note"]\cf2 \
+\cf5 // log(sScreenID)\cf2 \
+\cf5 // log(sBasicScreenID)\cf2 \
+\cf5 // log(sName)\cf2 \
+\cf5 // log(sNote)\cf2 \
+\
+\
+\cf5 // function loadFramework(fwName, path) \{\cf2 \
+\cf5 //   var mocha = Mocha.sharedRuntime();\cf2 \
+\cf5 //   var frameworkName = fwName;\cf2 \
+\cf5 //   var directory = path;\cf2 \
+\cf5 //   \cf2 \
+\cf5 //   if (mocha.valueForKey(frameworkName)) \{\cf2 \
+\cf5 //     log("already loaded");\cf2 \
+\cf5 //     return true;\cf2 \
+\cf5 //   \} \cf2 \
+\cf5 //   else if ([mocha loadFrameworkWithName:frameworkName inDirectory:directory]) \{\cf2 \
+\cf5 //     mocha.setValue_forKey_(true, frameworkName);\cf2 \
+\cf5 //     log("load success");\cf2 \
+\cf5 //     return true;\cf2 \
+\cf5 //   \} \cf2 \
+\cf5 //   else \{\cf2 \
+\cf5 //     log("load error");\cf2 \
+\cf5 //     return false;\cf2 \
+\cf5 //   \}\cf2 \
+\cf5 // \}\cf2 \
+\cf5 // loadFramework("sketchPluginFramework", "/Users/navibase/sketch-iauto/sketchplugin/bundle_xcode/sketchPluginFramework");\cf2 \
+\cf5 // \cf2 \
+\cf5 // sc = SCommon.shared()\cf2 \
+\cf5 // sc.setMemProperty_Value("keyx", "value1")\cf2 \
+\cf5 // log([sc getMemProperty:@"x"])\cf2 \
+\cf5 // log([sc getMemProperty:@"keyx"])\cf2 \
+\cf5 // const mainSplitView = context.document.splitViewController().splitView()\cf2 \
+\cf5 // let mainSplitSubviews = mainSplitView.arrangedSubviews()\cf2 \
+\
+\cf5 // SInherit\cf2 \
+\cf5 // SInherit = function(className, BaseClass, selectorHandlerDict) \{\cf2 \
+\cf5 //     var uniqueClassName = className + NSUUID.UUID().UUIDString();\cf2 \
+\cf5 //     var delegateClassDesc = MOClassDescription.allocateDescriptionForClassWithName_superclass_(uniqueClassName, BaseClass);\cf2 \
+\cf5 //     for (var selectorString in selectorHandlerDict) \{\cf2 \
+\cf5 //         delegateClassDesc.addInstanceMethodWithSelector_function_(selectorString, selectorHandlerDict[selectorString]);\cf2 \
+\cf5 //         //log(selectorString + "->" + selectorHandlerDict[selectorString].toString())\cf2 \
+\cf5 //     \}\cf2 \
+\cf5 //     delegateClassDesc.registerClass();\cf2 \
+\cf5 //     return NSClassFromString(uniqueClassName);\cf2 \
+\cf5 // \};\cf2 \
+\cf5 // var Delegate = SInherit("NSDelagate", SScreenInfoViewDelegate, \{\cf2 \
+\cf5 //     "comboBoxSelectionDidChange:":function(notify)\{ \cf2 \
+\cf5 //     \}\cf2 \
+\cf5 // \})\cf2 \
+\cf5 // log(Delegate)\cf2 \
+\cf5 // var delegageObj = Delegate.alloc().init()\cf2 \
+\cf5 // log(delegageObj)\cf2 \
+\cf5 // \cf2 \
+\cf5 // var view = pluginMainView.shared();\cf2 \
+\cf5 // view.showParts()\cf2 \
+\cf5 // view.showScreen()\cf2 \
+\cf5 // var partsView = view.getPartsView();\cf2 \
+\cf5 // var screenInfoView = view.getScreenInfoView();\cf2 \
+\cf5 // screenInfoView.setDelegage(delegageObj);\cf2 \
+\cf5 // \cf2 \
+\cf5 // testmodelData = partsView.getTestModelData()\cf2 \
+\cf5 // partsView.setModelData(testmodelData);\cf2 \
+\cf5 // log("end")\cf2 \
+\cf5 // \cf2 \
+\cf5 // mainSplitView.insertArrangedSubview_atIndex(partsView, mainSplitSubviews.length-1)\cf2 \
+\cf5 //log(context.selection[0])\cf2 \
+}

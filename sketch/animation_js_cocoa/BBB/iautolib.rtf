@@ -1,0 +1,623 @@
+{\rtf1\ansi\ansicpg936\cocoartf1561\cocoasubrtf400
+{\fonttbl\f0\fnil\fcharset0 AndaleMono;}
+{\colortbl;\red255\green255\blue255;\red0\green0\blue0;\red67\green67\blue67;\red0\green0\blue255;
+\red251\green0\blue7;}
+{\*\expandedcolortbl;;\csgray\c0;\csgray\c33333;\cssrgb\c0\c0\c100000;
+\cssrgb\c100000\c0\c0;}
+\paperw11900\paperh16840\margl1440\margr1440\vieww30860\viewh12560\viewkind0
+\pard\tx560\tx1120\tx1680\tx2240\tx2800\tx3360\tx3920\tx4480\tx5040\tx5600\tx6160\tx6720\pardirnatural\partightenfactor0
+
+\f0\fs24 \cf2 log(\cf3 "start"\cf2 )\
+coscript.setShouldKeepAround(\cf4 true\cf2 );\
+\
+\cf4 var\cf2  identifier = \cf3 "myToolbarThread"\cf2 ;\
+\cf4 var\cf2  threadDictionary = NSThread.mainThread().threadDictionary();\
+\cf4 var\cf2  Toolbar = threadDictionary[identifier];\
+Toolbar = NSPanel.alloc().init();\
+\pard\tx560\tx1120\tx1680\tx2240\tx2800\tx3360\tx3920\tx4480\tx5040\tx5600\tx6160\tx6720\pardirnatural\partightenfactor0
+\cf5 //Toolbar.setStyleMask(NSTitledWindowMask + NSFullSizeContentViewWindowMask);\cf2 \
+Toolbar.setBackgroundColor(NSColor.colorWithRed_green_blue_alpha(\cf4 0.9\cf2 , \cf4 0.9\cf2 , \cf4 0.9\cf2 , \cf4 1\cf2 ));\
+\cf5 //Toolbar.setTitleVisibility(NSWindowTitleHidden);\cf2 \
+Toolbar.setTitlebarAppearsTransparent(\cf4 true\cf2 );\
+Toolbar.setFrame_display(NSMakeRect(\cf4 0\cf2 , \cf4 0\cf2 , \cf4 800\cf2 , \cf4 480\cf2 ), \cf4 false\cf2 );\
+Toolbar.setMovableByWindowBackground(\cf4 true\cf2 );\
+Toolbar.becomeKeyWindow();\
+Toolbar.setLevel(NSFloatingWindowLevel);\
+\pard\tx560\tx1120\tx1680\tx2240\tx2800\tx3360\tx3920\tx4480\tx5040\tx5600\tx6160\tx6720\pardirnatural\partightenfactor0
+\cf4 var\cf2  contentView = Toolbar.contentView();\
+context.document.showMessage(\cf3 'Start'\cf2 )   \
+\
+\pard\tx560\tx1120\tx1680\tx2240\tx2800\tx3360\tx3920\tx4480\tx5040\tx5600\tx6160\tx6720\pardirnatural\partightenfactor0
+\cf5 ///////////////////////////////////////////////////////////////////////////\cf2 \
+\cf5 // iauto lib\cf2 \
+\
+\cf5 // SInherit\cf2 \
+SInherit = \cf4 function\cf2 (className, BaseClass, selectorHandlerDict) \{\
+    \cf4 var\cf2  uniqueClassName = className + NSUUID.UUID().UUIDString();\
+    \cf4 var\cf2  delegateClassDesc = MOClassDescription.allocateDescriptionForClassWithName_superclass_(uniqueClassName, BaseClass);\
+    \cf4 for\cf2  (\cf4 var\cf2  selectorString \cf4 in\cf2  selectorHandlerDict) \{\
+        delegateClassDesc.addInstanceMethodWithSelector_function_(selectorString, selectorHandlerDict[selectorString]);\
+        \cf5 //log(selectorString + "->" + selectorHandlerDict[selectorString].toString())\cf2 \
+    \}\
+    delegateClassDesc.registerClass();\
+    \cf4 return\cf2  NSClassFromString(uniqueClassName);\
+\};\
+\
+\cf5 // SNSButtonInner\cf2 \
+\pard\tx560\tx1120\tx1680\tx2240\tx2800\tx3360\tx3920\tx4480\tx5040\tx5600\tx6160\tx6720\pardirnatural\partightenfactor0
+\cf4 var\cf2  SNSButtonInner = SInherit(\cf3 "SNSButton"\cf2 , NSButton, \{\
+    \cf3 "mouseDown:"\cf2 :\cf4 function\cf2 (ev)\{ \
+            \cf5 //context.document.showMessage('mouseDown')\cf2 \
+            \cf4 if\cf2 (\cf4 this\cf2 .mouseDownHander)\
+            \{\
+                \cf4 this\cf2 .mouseDownHander(ev)\
+            \}\
+        \},\
+    \cf3 "mouseUp:"\cf2 :\cf4 function\cf2 (ev)\{ \
+            \cf5 //context.document.showMessage('mouseUp')\cf2 \
+            \cf4 if\cf2 (\cf4 this\cf2 .mouseUpHander)\
+            \{\
+                \cf4 this\cf2 .mouseUpHander(ev)\
+            \}\
+        \},\
+    \cf3 "mouseEntered:"\cf2 :\cf4 function\cf2 (ev)\{\
+            \cf5 //context.document.showMessage('mouseEntered')\cf2 \
+            \cf4 if\cf2 (\cf4 this\cf2 .mouseEnteredHander)\
+            \{\
+                \cf4 this\cf2 .mouseEnteredHander(ev)\
+            \}\
+        \},\
+    \cf3 "mouseExited:"\cf2 :\cf4 function\cf2 (ev)\{ \
+            \cf5 //context.document.showMessage('mouseExited')\cf2 \
+            \cf4 if\cf2 (\cf4 this\cf2 .mouseExitedHander)\
+            \{\
+                \cf4 this\cf2 .mouseExitedHander(ev)\
+            \}\
+        \},\
+    \cf3 "addMouseDownHander:"\cf2 :\cf4 function\cf2 (f)\{ \
+            \cf4 this\cf2 .mouseDownHander = f;\
+        \},\
+    \cf3 "addMouseUpHander:"\cf2 :\cf4 function\cf2 (f)\{ \
+            \cf4 this\cf2 .mouseUpHander = f;\
+        \},\
+    \cf3 "addMouseEnteredHander:"\cf2 :\cf4 function\cf2 (f)\{ \
+            \cf4 this\cf2 .mouseEnteredHander = f;\
+        \},\
+    \cf3 "addMouseExitedHander:"\cf2 :\cf4 function\cf2 (f)\{ \
+            \cf4 this\cf2 .mouseExitedHander = f;\
+        \},\
+\})\
+\
+\pard\tx560\tx1120\tx1680\tx2240\tx2800\tx3360\tx3920\tx4480\tx5040\tx5600\tx6160\tx6720\pardirnatural\partightenfactor0
+\cf5 // SNSButton\cf2 \
+\pard\tx560\tx1120\tx1680\tx2240\tx2800\tx3360\tx3920\tx4480\tx5040\tx5600\tx6160\tx6720\pardirnatural\partightenfactor0
+\cf4 class\cf2  SNSButton\
+\{\
+    constructor()\
+    \{\
+        \cf4 this\cf2 .button = SNSButtonInner.alloc().init();\
+\
+        \cf5 // create layer\cf2 \
+        \cf4 var\cf2  buttonViewLayer = CALayer.layer();\
+        buttonViewLayer.setBackgroundColor(CGColorCreateGenericRGB(\cf4 0.4\cf2 ,\'a0\cf4 0.4\cf2 ,\'a0\cf4 0.4\cf2 ,\'a0\cf4 0.8\cf2 ));\
+        \cf4 this\cf2 .button.setLayer(buttonViewLayer);\
+        \cf4 this\cf2 .button.setWantsLayer(\cf4 true\cf2 )\
+        \
+        \cf5 // create this.buttontextField\cf2 \
+        \cf4 this\cf2 .buttontextField = NSTextField.alloc().init()\
+\
+        \cf5 // default handler\cf2 \
+        \cf4 var\cf2  self=\cf4 this\cf2 ;\
+        \cf4 this\cf2 .addMouseDownHander(\cf4 function\cf2 (ev)\{\
+            self.button.layer().setBackgroundColor(CGColorCreateGenericRGB(\cf4 0.6\cf2 ,\'a0\cf4 0.0\cf2 ,\'a0\cf4 0.0\cf2 ,\'a0\cf4 0.8\cf2 ));\
+        \})\
+        \cf4 this\cf2 .addMouseUpHander(\cf4 function\cf2 (ev)\{\
+            self.button.layer().setBackgroundColor(CGColorCreateGenericRGB(\cf4 0.4\cf2 ,\'a0\cf4 0.4\cf2 ,\'a0\cf4 0.4\cf2 ,\'a0\cf4 0.8\cf2 ));\
+        \})\
+        \cf4 this\cf2 .addMouseEnteredHander(\cf4 function\cf2 (ev)\{\
+            self.buttontextField.setTextColor(NSColor.colorWithDeviceRed_green_blue_alpha(\cf4 0.9\cf2 , \cf4 0.9\cf2 , \cf4 0.9\cf2 , \cf4 0.9\cf2 ))\
+        \})\
+        \cf4 this\cf2 .addMouseExitedHander(\cf4 function\cf2 (ev)\{\
+            self.buttontextField.setTextColor(NSColor.colorWithDeviceRed_green_blue_alpha(\cf4 0.8\cf2 , \cf4 0.8\cf2 , \cf4 0.8\cf2 , \cf4 0.8\cf2 ))\
+        \})\
+    \}\
+    clear()\
+    \{\
+        \cf4 var\cf2  self=\cf4 this\cf2 ;\
+        \cf4 if\cf2 (self.button.layer())\
+        \{\
+            self.button.layer().setBackgroundColor(CGColorCreateGenericRGB(\cf4 0.6\cf2 ,\'a0\cf4 0.0\cf2 ,\'a0\cf4 0.0\cf2 ,\'a0\cf4 0\cf2 ));\
+        \}\
+\
+        \cf4 this\cf2 .addMouseDownHander(\cf4 function\cf2 (ev)\{\
+            self.button.layer().setBackgroundColor(CGColorCreateGenericRGB(\cf4 0.6\cf2 ,\'a0\cf4 0.0\cf2 ,\'a0\cf4 0.0\cf2 ,\'a0\cf4 0\cf2 ));\
+        \})\
+        \cf4 this\cf2 .addMouseUpHander(\cf4 function\cf2 (ev)\{\
+            self.button.layer().setBackgroundColor(CGColorCreateGenericRGB(\cf4 0.4\cf2 ,\'a0\cf4 0.4\cf2 ,\'a0\cf4 0.4\cf2 ,\'a0\cf4 0\cf2 ));\
+        \})\
+        \cf4 this\cf2 .addMouseEnteredHander(\cf4 function\cf2 (ev)\{\
+            self.buttontextField.setTextColor(NSColor.colorWithDeviceRed_green_blue_alpha(\cf4 0.9\cf2 , \cf4 0.9\cf2 , \cf4 0.9\cf2 , \cf4 0\cf2 ))\
+        \})\
+        \cf4 this\cf2 .addMouseExitedHander(\cf4 function\cf2 (ev)\{\
+            self.buttontextField.setTextColor(NSColor.colorWithDeviceRed_green_blue_alpha(\cf4 0.8\cf2 , \cf4 0.8\cf2 , \cf4 0.8\cf2 , \cf4 0\cf2 ))\
+        \})\
+    \}\
+    getView()\
+    \{\
+        \cf4 return\cf2  \cf4 this\cf2 .button;\
+    \}\
+    setFrame(frame)\
+    \{\
+        \cf4 this\cf2 .button.setFrame(frame);\
+        \cf4 this\cf2 .width = frame.size.width;\
+        \cf4 this\cf2 .height = frame.size.height;\
+        \
+        \cf5 // text\cf2 \
+        \cf4 var\cf2  fontH = \cf4 this\cf2 .height/\cf4 2\cf2 \
+        \cf4 this\cf2 .buttontextField.setBezeled(\cf4 false\cf2 )\
+        \cf4 this\cf2 .buttontextField.setDrawsBackground(\cf4 false\cf2 )\
+        \cf4 this\cf2 .buttontextField.setEditable(\cf4 false\cf2 )\
+        \cf4 this\cf2 .buttontextField.setSelectable(\cf4 false\cf2 )\
+        \cf4 this\cf2 .buttonfont = NSFont.fontWithName_size(\cf3 "Arial"\cf2 , fontH);\
+        \cf4 this\cf2 .buttontextField.setFont(\cf4 this\cf2 .buttonfont);\
+        \cf4 this\cf2 .buttontextField.setTextColor(NSColor.colorWithDeviceRed_green_blue_alpha(\cf4 0.8\cf2 , \cf4 0.8\cf2 , \cf4 0.8\cf2 , \cf4 0.8\cf2 ))\
+        \cf4 this\cf2 .buttontextField.setAlignment(NSCenterTextAlignment)\
+        \cf4 var\cf2  textHeigh = \cf4 this\cf2 .buttontextField.attributedStringValue().size().height;\
+        \cf4 var\cf2  TextY=(\cf4 this\cf2 .height-textHeigh)/\cf4 2\cf2 \
+        \cf4 this\cf2 .buttontextField.setFrame(NSMakeRect(\cf4 0\cf2 , TextY, \cf4 this\cf2 .width, \cf4 this\cf2 .height))\
+        \cf4 this\cf2 .button.addSubview(\cf4 this\cf2 .buttontextField);\
+\
+        \cf5 // tracking area\cf2 \
+        \cf4 this\cf2 .buttontrackingArea = NSTrackingArea.alloc().initWithRect_options_owner_userInfo(NSMakeRect(\cf4 0\cf2 , \cf4 0\cf2 , \cf4 this\cf2 .width, \cf4 this\cf2 .height),\
+            NSTrackingMouseMoved+NSTrackingActiveInKeyWindow+NSTrackingMouseEnteredAndExited, \cf4 this\cf2 .button, \cf4 nil\cf2 );\
+        \cf4 this\cf2 .button.addTrackingArea(\cf4 this\cf2 .buttontrackingArea);\
+    \}\
+    frame()\
+    \{\
+        \cf4 return\cf2  \cf4 this\cf2 .button.frame();\
+    \}\
+    setAttributedTitle(text)\
+    \{\
+        \cf4 this\cf2 .buttontextField.setStringValue(text);\
+    \}\
+    setImage(image)\
+    \{\
+        \cf4 this\cf2 .button.setLayer(\cf4 nil\cf2 );\
+        \cf4 this\cf2 .button.setImage(image);\
+        \cf4 this\cf2 .button.cell().setImageScaling(NSImageScaleAxesIndependently);\
+        \cf4 this\cf2 .button.setBordered(\cf4 false\cf2 );\
+    \}\
+    addMouseDownHander(f)\{\
+        \cf4 this\cf2 .button.addMouseDownHander(f);\
+    \}\
+    addMouseUpHander(f)\{\
+        \cf4 this\cf2 .button.addMouseUpHander(f);\
+    \}\
+    addMouseEnteredHander(f)\{\
+        \cf4 this\cf2 .button.addMouseEnteredHander(f);\
+    \}\
+    addMouseExitedHander(f)\{\
+        \cf4 this\cf2 .button.addMouseExitedHander(f);\
+    \}\
+\}\
+\
+\pard\tx560\tx1120\tx1680\tx2240\tx2800\tx3360\tx3920\tx4480\tx5040\tx5600\tx6160\tx6720\pardirnatural\partightenfactor0
+\cf5 // SNSGifView\cf2 \
+\pard\tx560\tx1120\tx1680\tx2240\tx2800\tx3360\tx3920\tx4480\tx5040\tx5600\tx6160\tx6720\pardirnatural\partightenfactor0
+\cf4 class\cf2  SNSGifView\
+\{\
+    constructor()\
+    \{\
+        \cf4 this\cf2 .imageView = NSImageView.alloc().init(); \
+        \cf5 //this.imageView.imageFrameStyle = NSImageFramePhoto;\cf2 \
+        \cf4 this\cf2 .imageView.alphaValue = \cf4 0.8\cf2 \
+\
+        \cf4 this\cf2 .image = \cf4 nil\cf2 ;\
+        \cf4 this\cf2 .imageList = \cf4 nil\cf2 \
+        \cf4 this\cf2 .totalFrameCnt = \cf4 0\cf2 \
+    \}\
+    setImage(image)\
+    \{\
+        \cf4 this\cf2 .image = image;\
+\
+        \cf5 //this.imageView.image = image; // this will auto repeat play, cannot control\cf2 \
+        \cf4 this\cf2 .reps = image.representations();\
+        \cf4 this\cf2 .bitmapRep = \cf4 nil\cf2 \
+        \cf4 this\cf2 .totalFrameCnt = \cf4 0\cf2 ;\
+        \cf4 for\cf2  (\cf4 var\cf2  x = \cf4 0\cf2 ; x< \cf4 this\cf2 .reps.count(); x++) \{\
+            \cf4 this\cf2 .bitmapRep = \cf4 this\cf2 .reps[x];\
+            \cf4 var\cf2  props = \cf4 this\cf2 .bitmapRep.valueForProperty(NSImageFrameCount);\
+            \cf4 this\cf2 .totalFrameCnt = props.intValue();\
+        \};\
+        \cf5 //log("totalFrameCnt=" + this.totalFrameCnt.toString())\cf2 \
+\
+        \cf5 //set image current\cf2 \
+        \cf4 if\cf2 (\cf4 this\cf2 .totalFrameCnt > \cf4 0\cf2 ) \{\
+            \cf4 var\cf2  number = NSNumber.numberWithInt(\cf4 0\cf2 )\
+            \cf4 this\cf2 .bitmapRep.setProperty_withValue(NSImageCurrentFrame, number)\
+            \cf4 var\cf2  repData = \cf4 this\cf2 .bitmapRep.representationUsingType_properties(NSPNGFileType, \cf4 nil\cf2 )\
+            image = NSImage.alloc().initWithData(repData);\
+            \cf4 this\cf2 .imageView.image = image\
+        \};\
+    \}\
+    setImageFile(filename)\
+    \{\
+        \cf4 this\cf2 .setImage(NSImage.alloc().initWithContentsOfFile(filename));\
+    \}\
+    setImagePath(filepath)\
+    \{\
+        \cf4 this\cf2 .imageList=[]\
+\
+        \cf4 var\cf2  fm=NSFileManager.defaultManager();\
+        \cf4 var\cf2  strarray=fm.contentsOfDirectoryAtPath_error(filepath,\cf4 nil\cf2 )\
+        \cf4 var\cf2  count=strarray.count();\
+        \cf4 for\cf2 (\cf4 var\cf2  i=\cf4 0\cf2 ;i<count;i++)\
+        \{\
+            \cf4 var\cf2  filename=strarray.objectAtIndex(i);\
+            \cf4 var\cf2  filefullname=filepath+\cf3 "/"\cf2 +filename;\
+            \cf4 if\cf2 (filefullname.match(\cf3 ".png"\cf2 ))\
+            \{\
+                \cf4 var\cf2  image = NSImage.alloc().initWithContentsOfFile(filefullname);\
+                \cf4 this\cf2 .imageList.push(image)\
+            \}\
+            \
+        \}\
+        \cf4 this\cf2 .totalFrameCnt=count\
+    \
+        \cf5 //set image current\cf2 \
+        \cf4 if\cf2 (\cf4 this\cf2 .imageList.length>\cf4 0\cf2 )\
+        \{\
+            \cf4 this\cf2 .imageView.image = \cf4 this\cf2 .imageList[\cf4 0\cf2 ]\
+        \}\
+    \}\
+    setFrame(frame)\
+    \{\
+        \cf4 this\cf2 .imageView.setFrame(frame);\
+    \}\
+    getView()\
+    \{\
+        \cf4 return\cf2  \cf4 this\cf2 .imageView;\
+    \}\
+    reset()\
+    \{ \
+        \cf4 var\cf2  imageView = \cf4 this\cf2 .imageView;\
+        \cf4 var\cf2  imageList = \cf4 this\cf2 .imageList;\
+        \cf4 var\cf2  totalFrameCnt = \cf4 this\cf2 .totalFrameCnt;\
+        imageView.image=imageList[\cf4 0\cf2 ]\
+    \}\
+    play(timeinterval)\
+    \{\
+        \cf4 var\cf2  totalFrameCnt = \cf4 this\cf2 .totalFrameCnt;\
+        \cf4 var\cf2  speedOneFrame = timeinterval/totalFrameCnt;\
+        \cf4 var\cf2  curFrameIndex = \cf4 0\cf2 ;\
+        \cf4 var\cf2  imageView = \cf4 this\cf2 .imageView;\
+\
+        \cf4 var\cf2  bitmapRep = \cf4 this\cf2 .bitmapRep;\
+        \cf4 var\cf2  imageList = \cf4 this\cf2 .imageList;\
+        \
+        \cf4 for\cf2 (\cf4 var\cf2  i=\cf4 0\cf2 ; i<=totalFrameCnt; i++)\
+        \{\
+            coscript.setShouldKeepAround(\cf4 true\cf2 );\
+            coscript.scheduleWithInterval_jsFunction(i*speedOneFrame, \cf4 function\cf2 () \{\
+\
+                \cf4 if\cf2 (curFrameIndex>=totalFrameCnt)\
+                \{\
+                    curFrameIndex=\cf4 0\cf2 ;\
+                \}\
+                \cf5 //context.document.showMessage(curFrameIndex.toString());\cf2 \
+                \
+                \cf5 // draw current frame\cf2 \
+                \cf4 var\cf2  image=\cf4 nil\cf2 \
+                \cf4 if\cf2 (bitmapRep)\
+                \{\
+                    \cf4 var\cf2  number = NSNumber.numberWithInt(curFrameIndex);\
+                    bitmapRep.setProperty_withValue(NSImageCurrentFrame, number);\
+                    \cf4 var\cf2  repData = bitmapRep.representationUsingType_properties(NSPNGFileType, \cf4 nil\cf2 )\
+                    image = NSImage.alloc().initWithData(repData);\
+                \}\
+                \cf4 if\cf2 (imageList)\
+                \{\
+                    image = imageList[curFrameIndex]\
+                \}\
+                \
+                imageView.image = image;\
+                \
+                curFrameIndex=curFrameIndex+\cf4 1\cf2 \
+            \});\
+        \}\
+    \}\
+\}\
+\
+\pard\tx560\tx1120\tx1680\tx2240\tx2800\tx3360\tx3920\tx4480\tx5040\tx5600\tx6160\tx6720\pardirnatural\partightenfactor0
+\cf5 // SNSListCtrl\cf2 \
+\pard\tx560\tx1120\tx1680\tx2240\tx2800\tx3360\tx3920\tx4480\tx5040\tx5600\tx6160\tx6720\pardirnatural\partightenfactor0
+\cf4 class\cf2  SNSListCtrl \{\
+    constructor(context)\
+    \{\
+        \cf4 this\cf2 .context = context\
+\
+        \cf4 this\cf2 .scrollView = NSScrollView.alloc().init();\
+        \cf4 this\cf2 .scrollView.setDrawsBackground(\cf4 false\cf2 )\
+        \cf5 //this.scrollView.hasVerticalScroller = true\cf2 \
+        \cf5 //this.scrollView.setHidden(true)\cf2 \
+\
+        \cf4 this\cf2 .btnList = []\
+\
+        \cf4 this\cf2 .width = \cf4 0\cf2 ;\
+        \cf4 this\cf2 .height = \cf4 0\cf2 ;\
+        \cf4 this\cf2 .itemHeight = \cf4 0\cf2 ;\
+        \cf4 this\cf2 .grapHeight = \cf4 3\cf2 ;\
+    \}\
+    setFrame(frame)\
+    \{\
+        \cf4 this\cf2 .scrollView.frame = frame;\
+        \cf4 this\cf2 .width = frame.size.width;\
+        \cf4 this\cf2 .height = frame.size.height;\
+        \cf4 this\cf2 .itemHeight = frame.size.height/\cf4 4\cf2 ;\
+    \}\
+    setItemHeight(h)\
+    \{\
+        \cf4 this\cf2 .itemHeight = h\
+    \}\
+    getView()\
+    \{\
+        log(\cf3 "IAutoList.mainView"\cf2 )\
+        \cf4 return\cf2  \cf4 this\cf2 .scrollView;\
+    \}\
+    addButton(name, btn)\
+    \{\
+        btn.setAttributedTitle(name);\
+        btn.setFrame(NSMakeRect(\cf4 0\cf2 , \cf4 0\cf2 , \cf4 this\cf2 .width, \cf4 this\cf2 .itemHeight));\
+        \cf5 //btn.alphaValue = 0.6;\cf2 \
+        \cf4 this\cf2 .btnList.push(btn)\
+    \}\
+    reset()\
+    \{\
+        \cf4 var\cf2  contentView = NSView.alloc().init();\
+        \cf4 this\cf2 .scrollView.documentView = contentView\
+    \}\
+    play(name=\cf3 ""\cf2 ,param=\cf4 nil\cf2 )\
+    \{\
+        \cf4 if\cf2 (name==\cf3 "animation_list_in_horizontal"\cf2 )\
+        \{\
+            \cf4 this\cf2 .animation_list_in_horizontal()\
+        \}\
+        \cf4 if\cf2 (name==\cf3 "animation_list_in_vertical"\cf2 )\
+        \{\
+            \cf4 this\cf2 .animation_list_in_vertical()\
+        \}\
+        \cf4 if\cf2 (name==\cf3 "animation_stretch"\cf2 )\
+        \{\
+            \cf4 this\cf2 .animation_stretch(param)\
+        \}\
+    \}\
+    animation_list_in_vertical()\
+    \{\
+        log(\cf3 "IAutoList.show"\cf2 )\
+\
+        \cf4 var\cf2  contentView = NSView.alloc().init();\
+        \cf4 var\cf2  contentViewHeight = \cf4 this\cf2 .btnList.length*(\cf4 this\cf2 .itemHeight+\cf4 this\cf2 .grapHeight);\
+        \cf4 if\cf2 (contentViewHeight<\cf4 this\cf2 .height)\
+            contentViewHeight = \cf4 this\cf2 .height\
+        contentView.frame = NSMakeRect(\cf4 0\cf2 , \cf4 0\cf2 , \cf4 this\cf2 .width, contentViewHeight);\
+        \cf4 this\cf2 .scrollView.documentView = contentView\
+        \
+        \cf5 //this.scrollView.setHidden(false)\cf2 \
+        \cf4 for\cf2 (\cf4 var\cf2  i=\cf4 0\cf2 ; i< \cf4 this\cf2 .btnList.length; i++)\
+        \{\
+            \cf4 var\cf2  btnY = \cf4 this\cf2 .height - (i+\cf4 1\cf2 )*\cf4 this\cf2 .itemHeight - i*\cf4 this\cf2 .grapHeight;\
+            \cf4 this\cf2 .btnList[i].setFrame(NSMakeRect(\cf4 0\cf2 , btnY, \cf4 this\cf2 .width, \cf4 this\cf2 .itemHeight));\
+            contentView.addSubview(\cf4 this\cf2 .btnList[i].getView());\
+        \}\
+\
+        \cf4 for\cf2 (\cf4 var\cf2  i=\cf4 0\cf2 ; i< \cf4 this\cf2 .btnList.length; i++)\
+        \{\
+            \cf4 var\cf2  animationTarget =  \cf4 this\cf2 .btnList[i].getView();\
+            \cf4 var\cf2  startframe = NSValue.valueWithRect(NSMakeRect(\cf4 0\cf2 , -i*\cf4 100\cf2 , \cf4 this\cf2 .width, \cf4 this\cf2 .itemHeight));\
+            \cf4 var\cf2  endframe = NSValue.valueWithRect(NSMakeRect(\cf4 this\cf2 .btnList[i].frame().origin.x, \cf4 this\cf2 .btnList[i].frame().origin.y, \cf4 this\cf2 .width, \cf4 this\cf2 .itemHeight));\
+            \cf5 //var endframe = NSValue.valueWithRect(this.btnList[i].frame());\cf2 \
+            \cf4 var\cf2  keys = [NSViewAnimationTargetKey,NSViewAnimationStartFrameKey,NSViewAnimationEndFrameKey];\
+            \cf4 var\cf2  values = [animationTarget,startframe,endframe];\
+            \cf4 var\cf2  dictionary = [NSDictionary dictionaryWithObjects:(values) forKeys:(keys)];\
+            \cf4 var\cf2  animation = NSViewAnimation.alloc().initWithViewAnimations(NSArray.arrayWithObject(dictionary));\
+            animation.animationCurve = NSAnimationEaseIn;\
+            animation.duration = \cf4 0.3\cf2 +\cf4 0.2\cf2 *i;\
+            \cf5 // NSAnimationNonblocking\'a0NSAnimationNonblockingThreaded NSAnimationBlocking\cf2 \
+            animation.setAnimationBlockingMode(NSAnimationNonblockingThreaded);\
+            animation.startAnimation();\
+\
+        \}\
+\
+    \}\
+\
+    animation_list_in_horizontal()\
+    \{\
+        log(\cf3 "IAutoList.show"\cf2 )\
+\
+        \cf4 var\cf2  contentView = NSView.alloc().init();\
+        \cf4 var\cf2  contentViewHeight = \cf4 this\cf2 .btnList.length*(\cf4 this\cf2 .itemHeight+\cf4 this\cf2 .grapHeight);\
+        \cf4 if\cf2 (contentViewHeight<\cf4 this\cf2 .height)\
+            contentViewHeight = \cf4 this\cf2 .height\
+        contentView.frame = NSMakeRect(\cf4 0\cf2 , \cf4 0\cf2 , \cf4 this\cf2 .width, contentViewHeight);\
+        \cf4 this\cf2 .scrollView.documentView = contentView\
+        \
+        \cf5 //this.scrollView.setHidden(false)\cf2 \
+        \cf4 for\cf2 (\cf4 var\cf2  i=\cf4 0\cf2 ; i< \cf4 this\cf2 .btnList.length; i++)\
+        \{\
+            \cf4 var\cf2  btnY = \cf4 this\cf2 .height - (i+\cf4 1\cf2 )*\cf4 this\cf2 .itemHeight - i*\cf4 this\cf2 .grapHeight;\
+            \cf4 this\cf2 .btnList[i].setFrame(NSMakeRect(\cf4 0\cf2 , btnY, \cf4 this\cf2 .width, \cf4 this\cf2 .itemHeight));\
+            contentView.addSubview(\cf4 this\cf2 .btnList[i].getView());\
+        \}\
+\
+        \cf4 for\cf2 (\cf4 var\cf2  i=\cf4 0\cf2 ; i< \cf4 this\cf2 .btnList.length; i++)\
+        \{\
+            \cf4 var\cf2  animationTarget =  \cf4 this\cf2 .btnList[i].getView();\
+            \cf4 var\cf2  startframe = NSValue.valueWithRect(NSMakeRect(\cf4 this\cf2 .width*\cf4 2\cf2 , \cf4 this\cf2 .btnList[i].frame().origin.y, \cf4 this\cf2 .width, \cf4 this\cf2 .itemHeight));\
+            \cf4 var\cf2  endframe = NSValue.valueWithRect(\cf4 this\cf2 .btnList[i].getView().frame());\
+            \cf4 var\cf2  keys = [NSViewAnimationTargetKey,NSViewAnimationStartFrameKey,NSViewAnimationEndFrameKey];\
+            \cf4 var\cf2  values = [animationTarget,startframe,endframe];\
+            \cf4 var\cf2  dictionary = [NSDictionary dictionaryWithObjects:(values) forKeys:(keys)];\
+            \cf4 var\cf2  animation = NSViewAnimation.alloc().initWithViewAnimations(NSArray.arrayWithObject(dictionary));\
+            animation.animationCurve = NSAnimationEaseIn;\
+            animation.duration = \cf4 0.5\cf2 +\cf4 0.2\cf2 *i;\
+            animation.setAnimationBlockingMode(NSAnimationNonblockingThreaded);\
+            animation.startAnimation();\
+        \}\
+    \}\
+    animation_stretch(frame)\
+    \{\
+        log(\cf3 "IAutoList.show"\cf2 )\
+\
+        \cf5 // save W H\cf2 \
+        \cf4 var\cf2  beforeFrame = \cf4 this\cf2 .scrollView.frame();\
+        \cf4 this\cf2 .width = frame.size.width;\
+        \cf4 this\cf2 .height = frame.size.height;\
+\
+        \cf4 var\cf2  contentView = NSView.alloc().init();\
+        \cf4 var\cf2  contentViewHeight = \cf4 this\cf2 .btnList.length*(\cf4 this\cf2 .itemHeight+\cf4 this\cf2 .grapHeight);\
+        \cf4 if\cf2 (contentViewHeight<\cf4 this\cf2 .height)\
+            contentViewHeight = \cf4 this\cf2 .height\
+        contentView.frame = NSMakeRect(\cf4 0\cf2 , \cf4 0\cf2 , frame.size.width, contentViewHeight);\
+        \cf4 this\cf2 .scrollView.documentView = contentView\
+        \
+        \cf5 //this.scrollView.setHidden(false)\cf2 \
+        \cf4 for\cf2 (\cf4 var\cf2  i=\cf4 0\cf2 ; i< \cf4 this\cf2 .btnList.length; i++)\
+        \{\
+            \cf4 var\cf2  btnY = \cf4 this\cf2 .height - (i+\cf4 1\cf2 )*\cf4 this\cf2 .itemHeight - i*\cf4 this\cf2 .grapHeight;\
+            \cf4 this\cf2 .btnList[i].setFrame(NSMakeRect(\cf4 0\cf2 , btnY, \cf4 this\cf2 .width, \cf4 this\cf2 .itemHeight));\
+            contentView.addSubview(\cf4 this\cf2 .btnList[i].getView());\
+        \}\
+\
+        \cf4 var\cf2  animationTarget =  \cf4 this\cf2 .scrollView\
+        \cf4 var\cf2  startframe = NSValue.valueWithRect(beforeFrame);\
+        \cf4 var\cf2  endframe = NSValue.valueWithRect(frame);\
+        \cf4 var\cf2  keys = [NSViewAnimationTargetKey,NSViewAnimationStartFrameKey,NSViewAnimationEndFrameKey];\
+        \cf4 var\cf2  values = [animationTarget,startframe,endframe];\
+        \cf4 var\cf2  dictionary = [NSDictionary dictionaryWithObjects:(values) forKeys:(keys)];\
+        \cf4 var\cf2  animation = NSViewAnimation.alloc().initWithViewAnimations(NSArray.arrayWithObject(dictionary));\
+        animation.animationCurve = NSAnimationEaseIn;\
+        animation.duration = \cf4 0.5\cf2 ;\
+        animation.setAnimationBlockingMode(NSAnimationNonblockingThreaded);\
+        animation.startAnimation();\
+\
+        \cf4 var\cf2  animationTarget =  \cf4 this\cf2 .scrollView.documentView\
+        \cf4 var\cf2  startframe = NSValue.valueWithRect(beforeFrame);\
+        \cf4 var\cf2  endframe = NSValue.valueWithRect(frame);\
+        \cf4 var\cf2  keys = [NSViewAnimationTargetKey,NSViewAnimationStartFrameKey,NSViewAnimationEndFrameKey];\
+        \cf4 var\cf2  values = [animationTarget,startframe,endframe];\
+        \cf4 var\cf2  dictionary = [NSDictionary dictionaryWithObjects:(values) forKeys:(keys)];\
+        \cf4 var\cf2  animation = NSViewAnimation.alloc().initWithViewAnimations(NSArray.arrayWithObject(dictionary));\
+        animation.animationCurve = NSAnimationEaseIn;\
+        animation.duration = \cf4 0.5\cf2 ;\
+        animation.setAnimationBlockingMode(NSAnimationNonblockingThreaded);\
+        animation.startAnimation();\
+\
+        \cf4 for\cf2 (\cf4 var\cf2  i=\cf4 0\cf2 ; i< \cf4 this\cf2 .btnList.length; i++)\
+        \{\
+            \cf4 var\cf2  animationTarget =  \cf4 this\cf2 .btnList[i].getView()\
+            \cf4 var\cf2  startframe = NSValue.valueWithRect(NSMakeRect(\cf4 this\cf2 .btnList[i].getView().frame().origin.x, \cf4 this\cf2 .btnList[i].getView().frame().origin.y, \
+                \cf4 this\cf2 .btnList[i].getView().frame().size.width, \cf4 this\cf2 .itemHeight));\
+            \cf4 var\cf2  endframe = NSValue.valueWithRect(NSMakeRect(\cf4 0\cf2 , \cf4 this\cf2 .btnList[i].getView().frame().origin.y, frame.size.width, \cf4 this\cf2 .itemHeight));\
+            \cf4 var\cf2  keys = [NSViewAnimationTargetKey,NSViewAnimationStartFrameKey,NSViewAnimationEndFrameKey];\
+            \cf4 var\cf2  values = [animationTarget,startframe,endframe];\
+            \cf4 var\cf2  dictionary = [NSDictionary dictionaryWithObjects:(values) forKeys:(keys)];\
+            \cf4 var\cf2  animation = NSViewAnimation.alloc().initWithViewAnimations(NSArray.arrayWithObject(dictionary));\
+            animation.animationCurve = NSAnimationEaseIn;\
+            animation.duration = \cf4 0.5\cf2 ;\
+            animation.setAnimationBlockingMode(NSAnimationNonblockingThreaded);\
+            animation.startAnimation();\
+        \}\
+     \}\
+\}\
+\
+\
+\pard\tx560\tx1120\tx1680\tx2240\tx2800\tx3360\tx3920\tx4480\tx5040\tx5600\tx6160\tx6720\pardirnatural\partightenfactor0
+\cf5 ////////////////////////////////////////////////////////////////////////////////////////////\cf2 \
+\cf5 // test\cf2 \
+\
+\cf5 // image background\cf2 \
+imageView = NSImageView.alloc().init();\
+imageView.frame = NSMakeRect(\cf4 0\cf2 , \cf4 0\cf2 , \cf4 800\cf2 , \cf4 480\cf2 );\
+imageView.imageFrameStyle = NSImageFramePhoto; \
+imageView.imageScaling = NSImageScaleNone;\
+\pard\tx560\tx1120\tx1680\tx2240\tx2800\tx3360\tx3920\tx4480\tx5040\tx5600\tx6160\tx6720\pardirnatural\partightenfactor0
+\cf4 var\cf2  image = NSImage.alloc().initWithContentsOfFile(\cf3 "/Users/navibase/sketch-iauto/pic1.jpeg"\cf2 );\
+imageView.image = image\
+contentView.addSubview(imageView);\
+\
+\
+\pard\tx560\tx1120\tx1680\tx2240\tx2800\tx3360\tx3920\tx4480\tx5040\tx5600\tx6160\tx6720\pardirnatural\partightenfactor0
+\cf5 //SNSListCtrl\cf2 \
+listCtrl = \cf4 new\cf2  SNSListCtrl();\
+listCtrl.setFrame(NSMakeRect(\cf4 200\cf2 , \cf4 50\cf2 , \cf4 300\cf2 , \cf4 300\cf2 ));\
+listCtrl.setItemHeight(\cf4 50\cf2 )\
+sbtn1 = \cf4 new\cf2  SNSButton()\
+sbtn1.addMouseEnteredHander(\cf4 function\cf2 (ev)\{\
+            sbtn1.buttontextField.setTextColor(NSColor.colorWithDeviceRed_green_blue_alpha(\cf4 1\cf2 , \cf4 0\cf2 , \cf4 0\cf2 , \cf4 1\cf2 ))\
+        \})\
+listCtrl.addButton(\cf3 "button1"\cf2 , sbtn1)\
+sbtn2 = \cf4 new\cf2  SNSButton()\
+sbtn2.clear()\
+sbtn2.setImage(NSImage.alloc().initWithContentsOfFile(\cf3 "/Users/navibase/sketch-iauto/btn.png"\cf2 ))\
+listCtrl.addButton(\cf3 "button2"\cf2 , sbtn2)\
+sbtn3 = \cf4 new\cf2  SNSButton()\
+listCtrl.addButton(\cf3 "button3"\cf2 , sbtn3)\
+sbtn4 = \cf4 new\cf2  SNSButton()\
+listCtrl.addButton(\cf3 "button4"\cf2 , sbtn4)\
+sbtn5 = \cf4 new\cf2  SNSButton()\
+listCtrl.addButton(\cf3 "button5"\cf2 , sbtn5)\
+contentView.addSubview(listCtrl.getView());\
+\cf5 //listCtrl.play("animation_list_in_horizontal");\cf2 \
+listCtrl.play(\cf3 "animation_list_in_vertical"\cf2 );\
+\cf5 // listCtrl.play("animation_stretch", NSMakeRect(50, 50, 600, 300));\cf2 \
+\
+\cf5 // SNSImageView\cf2 \
+\pard\tx560\tx1120\tx1680\tx2240\tx2800\tx3360\tx3920\tx4480\tx5040\tx5600\tx6160\tx6720\pardirnatural\partightenfactor0
+\cf4 var\cf2  gifViewSelected = \cf4 new\cf2  SNSGifView()\
+gifViewSelected.setImagePath(\cf3 "/Users/navibase/sketch-iauto/frameanimation/Selected"\cf2 )\
+gifViewSelected.setFrame(NSMakeRect(\cf4 0\cf2 , \cf4 0\cf2 , \cf4 100\cf2 , \cf4 100\cf2 ))\
+gifViewSelected.getView().alphaValue=\cf4 1\cf2 \
+\pard\tx560\tx1120\tx1680\tx2240\tx2800\tx3360\tx3920\tx4480\tx5040\tx5600\tx6160\tx6720\pardirnatural\partightenfactor0
+\cf5 //contentView.addSubview(gifViewSelected.getView());\cf2 \
+\cf5 //gifView.play(1);\cf2 \
+\
+\pard\tx560\tx1120\tx1680\tx2240\tx2800\tx3360\tx3920\tx4480\tx5040\tx5600\tx6160\tx6720\pardirnatural\partightenfactor0
+\cf4 var\cf2  gifViewPress = \cf4 new\cf2  SNSGifView()\
+gifViewPress.setImagePath(\cf3 "/Users/navibase/sketch-iauto/frameanimation/Press"\cf2 )\
+gifViewPress.setFrame(NSMakeRect(\cf4 0\cf2 , \cf4 0\cf2 , \cf4 100\cf2 , \cf4 100\cf2 ))\
+gifViewPress.getView().alphaValue=\cf4 1\cf2 \
+\
+\pard\tx560\tx1120\tx1680\tx2240\tx2800\tx3360\tx3920\tx4480\tx5040\tx5600\tx6160\tx6720\pardirnatural\partightenfactor0
+\cf5 // SNSbutton\cf2 \
+\pard\tx560\tx1120\tx1680\tx2240\tx2800\tx3360\tx3920\tx4480\tx5040\tx5600\tx6160\tx6720\pardirnatural\partightenfactor0
+\cf4 var\cf2  sbtn = \cf4 new\cf2  SNSButton()\
+sbtn.setFrame(NSMakeRect(\cf4 50\cf2 , \cf4 50\cf2 , \cf4 100\cf2 , \cf4 100\cf2 ))\
+sbtn.clear()\
+sbtn.getView().addSubview(gifViewSelected.getView())\
+sbtn.addMouseEnteredHander(\cf4 function\cf2 (ev)\{\
+    sbtn.getView().addSubview(gifViewSelected.getView())\
+    gifViewSelected.play(\cf4 1\cf2 );\
+\})\
+sbtn.addMouseExitedHander(\cf4 function\cf2 (ev)\{\
+    gifViewSelected.reset()\
+    sbtn.getView().addSubview(gifViewSelected.getView())\
+\})\
+sbtn.addMouseDownHander(\cf4 function\cf2 (ev)\{\
+    sbtn.getView().addSubview(gifViewPress.getView())\
+    gifViewPress.play(\cf4 0.5\cf2 );\
+\})\
+sbtn.addMouseUpHander(\cf4 function\cf2 (ev)\{\
+    sbtn.getView().addSubview(gifViewSelected.getView())\
+    listCtrl.play(\cf3 "animation_list_in_horizontal"\cf2 );\
+\})\
+contentView.addSubview(sbtn.getView());\
+\
+\
+\
+\pard\tx560\tx1120\tx1680\tx2240\tx2800\tx3360\tx3920\tx4480\tx5040\tx5600\tx6160\tx6720\pardirnatural\partightenfactor0
+\cf5 ////////////////////////////////////////////////////////////////////////////\cf2 \
+threadDictionary[identifier] = Toolbar;\
+Toolbar.center();\
+Toolbar.makeKeyAndOrderFront(\cf4 nil\cf2 );\
+\
+log(\cf3 "over4"\cf2 )}

@@ -1,0 +1,391 @@
+{\rtf1\ansi\ansicpg936\cocoartf1561\cocoasubrtf400
+{\fonttbl\f0\fnil\fcharset0 AndaleMono;}
+{\colortbl;\red255\green255\blue255;\red0\green0\blue0;\red0\green0\blue255;\red67\green67\blue67;
+\red251\green0\blue7;}
+{\*\expandedcolortbl;;\csgray\c0;\cssrgb\c0\c0\c100000;\csgray\c33333;
+\cssrgb\c100000\c0\c0;}
+\paperw11900\paperh16840\margl1440\margr1440\vieww10800\viewh8400\viewkind0
+\pard\tx560\tx1120\tx1680\tx2240\tx2800\tx3360\tx3920\tx4480\tx5040\tx5600\tx6160\tx6720\slleading20\pardirnatural\partightenfactor0
+
+\f0\fs24 \cf2 @\cf3 import\cf2  \cf4 '/Users/navibase/sketch-iauto/sketchplugin/iautoPlugin.sketchplugin/Contents/Sketch/commonlib/basicVar.js'\cf2 \
+@\cf3 import\cf2  \cf4 '/Users/navibase/sketch-iauto/sketchplugin/iautoPlugin.sketchplugin/Contents/Sketch/commonlib/basicLog.js'\cf2 \
+@\cf3 import\cf2  \cf4 '/Users/navibase/sketch-iauto/sketchplugin/iautoPlugin.sketchplugin/Contents/Sketch/commonlib/logJS.js'\cf2 \
+@\cf3 import\cf2  \cf4 '/Users/navibase/sketch-iauto/sketchplugin/iautoPlugin.sketchplugin/Contents/Sketch/iautolib.js'\cf2 \
+@\cf3 import\cf2  \cf4 '/Users/navibase/sketch-iauto/sketchplugin/iautoPlugin.sketchplugin/Contents/Sketch/commonlib/basicFileIF.js'\cf2 \
+@\cf3 import\cf2  \cf4 '/Users/navibase/sketch-iauto/sketchplugin/iautoPlugin.sketchplugin/Contents/Sketch/commonlib/basicUIIF.js'\cf2 \
+\cf5 //coscript.setShouldKeepAround(true);\cf2 \
+@\cf3 import\cf2  \cf4 '/Users/navibase/sketch-iauto/sketchplugin/iautoPlugin.sketchplugin/Contents/Sketch/libJSonDB/iautoJsonDb.js'\cf2 \
+@\cf3 import\cf2  \cf4 '/Users/navibase/sketch-iauto/sketchplugin/iautoPlugin.sketchplugin/Contents/Sketch/libJSonDB/iautoJsonDbIF.js'\cf2 \
+@\cf3 import\cf2  \cf4 '/Users/navibase/sketch-iauto/sketchplugin/iautoPlugin.sketchplugin/Contents/Sketch/libUI/SRegisterViewControl.js'\cf2 \
+@\cf3 import\cf2  \cf4 '/Users/navibase/sketch-iauto/sketchplugin/iautoPlugin.sketchplugin/Contents/Sketch/libGenerator/iautobasicapi.js'\cf2 \
+\
+\cf3 function\cf2  getArtBoartSymbolsObjs(layer, list)\
+\{\
+    \cf3 if\cf2 (layer.\cf3 class\cf2 () == MSArtboardGroup || layer.\cf3 class\cf2 () == MSLayerGroup)\
+    \{\
+        \cf3 var\cf2  subLayers = layer.layers()\
+        \cf3 for\cf2 (\cf3 var\cf2  idxSub=\cf3 0\cf2 ; idxSub<subLayers.count(); idxSub++)\
+        \{\
+            \cf3 var\cf2  sublayer = subLayers[idxSub];\
+            \cf5 //log("sublayer:" + sublayer)\cf2 \
+            \cf3 if\cf2 (sublayer.\cf3 class\cf2 () == MSSymbolInstance)\
+            \{\
+                list.push(sublayer)\
+            \}\
+            \cf3 if\cf2 (sublayer.\cf3 class\cf2 () == MSLayerGroup)\
+            \{\
+                \cf3 var\cf2  tmpList = []\
+                getArtBoartSymbolsObjs(sublayer,tmpList)\
+                \cf5 //log(tmpList)\cf2 \
+                \cf3 for\cf2 (\cf3 var\cf2  i=\cf3 0\cf2 ;i<tmpList.length;i++)\
+                \{\
+                    list.push(tmpList[i])\
+                \}\
+            \}\
+        \}\
+    \}\
+    \cf3 if\cf2 (layer.\cf3 class\cf2 () == MSSymbolInstance)\
+    \{\
+        list.push(layer)\
+    \}\
+\}\
+\
+log(\cf4 "T0----------------"\cf2 )\
+\cf3 var\cf2  artboardobj = context.document.documentData().layerWithID(\cf4 "7A4DAFF1-049C-41D3-9BC8-2505CEBD93F7"\cf2 )\
+\cf3 var\cf2  sbs = []\
+getSubAllSymbolsObjs(artboardobj,sbs)\
+log(sbs)\
+log(\cf4 "T1----------------"\cf2 )\
+log(context.document.artboards()[\cf3 0\cf2 ])\
+\cf3 if\cf2 (context.document.artboards()[\cf3 0\cf2 ].\cf3 class\cf2 () == MSArtboardGroup)\
+\{\
+    log(\cf4 "xxx"\cf2 )\
+\}\
+log(\cf4 "T2----------------"\cf2 )\
+\cf3 var\cf2  artboardobj = context.document.documentData().layerWithID(\cf4 "7A4DAFF1-049C-41D3-9BC8-2505CEBD93F7"\cf2 )\
+log(artboardobj)\
+log(\cf4 "T3----------------"\cf2 )\
+log(context.document)\
+log(\cf4 "T4----------------"\cf2 )\
+log(context.document.artboards()[\cf3 0\cf2 ].layers())\
+\
+\cf5 // screenID = "          ";\cf2 \
+\cf5 // if ("" == screenID.trim()) \{\cf2 \
+\cf5 //     log("XX")\cf2 \
+\cf5 // \}\cf2 \
+\
+\cf5 //showPopupWindowWithBody(popupMessageArray.INVALID_INPUT_ALREADYEXIST,"xx");\cf2 \
+\
+\cf5 // function isResetDocument(context)\cf2 \
+\cf5 // \{\cf2 \
+\cf5 //     var curDocFile = context.document.fileURL().path()+"";\cf2 \
+\cf5 //     var lastDocFile = getMemProperty("context.document.filepath.recently")+"";\cf2 \
+\cf5 //     log("curDocFile:" + curDocFile);\cf2 \
+\cf5 //     log("lastDocFile:" + lastDocFile);\cf2 \
+\cf5 //     if (curDocFile != lastDocFile) \{\cf2 \
+\cf5 //         setMemProperty("context.document.filepath.recently", curDocFile);\cf2 \
+\cf5 //         return true;\cf2 \
+\cf5 //     \}\cf2 \
+\cf5 //     else\cf2 \
+\cf5 //     \{\cf2 \
+\cf5 //         return false;\cf2 \
+\cf5 //     \}\cf2 \
+\cf5 // \}\cf2 \
+\cf5 //isResetDocument(context)\cf2 \
+\
+\cf5 // var sc = SCommon.shared()\cf2 \
+\cf5 // log("MachineCode:"+sc.getMachineCode())\cf2 \
+\cf5 // \cf2 \
+\cf5 // var productKey = "B980A-9FF83-F1262-8F969-06A0E"\cf2 \
+\cf5 // bValidKey = [[SCommon shared] isValidProductKey:productKey];\cf2 \
+\cf5 // log("productKey:"+productKey)\cf2 \
+\cf5 // log("bValidKey:"+bValidKey)\cf2 \
+\
+\cf5 // updateTypeListByTypeName("PartsType", ["a","b"])\cf2 \
+\cf5 // log("start")\cf2 \
+\cf5 // \cf2 \
+\cf5 // var artboardobj = context.document.documentData().layerWithID("8BA487D1-0FF2-4833-8D99-D6EB199D2123")\cf2 \
+\cf5 // log(artboardobj.name())\cf2 \
+\cf5 // log(artboardobj)\cf2 \
+\
+\cf5 // log(context.document.cloudName())\cf2 \
+\cf5 // log(context.document.fileURL().path())\cf2 \
+\cf5 //log(artboardobj.parentGroup().name())\cf2 \
+\
+\cf5 //coscript.setShouldKeepAround(true);\cf2 \
+\
+\cf5 // var identifier = "myToolbarThread";\cf2 \
+\cf5 // var threadDictionary = NSThread.mainThread().threadDictionary();\cf2 \
+\cf5 //var Toolbar = threadDictionary[identifier];\cf2 \
+\cf5 //Toolbar = NSPanel.alloc().init();\cf2 \
+\cf5 // //Toolbar.setStyleMask(NSTitledWindowMask + NSFullSizeContentViewWindowMask);\cf2 \
+\cf5 // Toolbar.setBackgroundColor(NSColor.colorWithRed_green_blue_alpha(0.9, 0.9, 0.9, 1));\cf2 \
+\cf5 // //Toolbar.setTitleVisibility(NSWindowTitleHidden);\cf2 \
+\cf5 // Toolbar.setTitlebarAppearsTransparent(true);\cf2 \
+\cf5 // Toolbar.setFrame_display(NSMakeRect(0, 0, 800, 480), false);\cf2 \
+\cf5 // Toolbar.setMovableByWindowBackground(true);\cf2 \
+\cf5 // Toolbar.becomeKeyWindow();\cf2 \
+\cf5 // Toolbar.setLevel(NSFloatingWindowLevel);\cf2 \
+\cf5 // var contentView = Toolbar.contentView();\cf2 \
+\cf5 // context.document.showMessage('Start')   \cf2 \
+\
+\cf5 /////////////////////////////////////////////////////////////////////\cf2 \
+\
+\cf5 // imageView = NSImageView.alloc().init();\cf2 \
+\cf5 // imageView.frame = NSMakeRect(10, 10, 700, 420);\cf2 \
+\cf5 // imageView.animates = true\cf2 \
+\cf5 // imageView.imageFrameStyle = NSImageFramePhoto; \cf2 \
+\cf5 // imageView.imageScaling = NSImageScaleNone;\cf2 \
+\cf5 // var image = NSImage.alloc().initWithContentsOfFile("/Users/navibase/sketch-iauto/timg.gif");\cf2 \
+\cf5 // imageView.image = image\cf2 \
+\cf5 // \cf2 \
+\cf5 // contentView.addSubview(imageView);\cf2 \
+\cf5 // \cf2 \
+\cf5 // \cf2 \
+\cf5 // /////////////////////////////////////////////////////////////////////\cf2 \
+\cf5 // \cf2 \
+\cf5 // threadDictionary[identifier] = Toolbar;\cf2 \
+\cf5 //Toolbar.center();\cf2 \
+\cf5 //Toolbar.makeKeyAndOrderFront(nil);\cf2 \
+\cf5 // \cf2 \
+\cf5 // log("over")\cf2 \
+\
+\
+\cf5 // var path = pluginPath(context);\cf2 \
+\cf5 // var result = loadFramework(path);\cf2 \
+\cf5 // \cf2 \
+\cf5 // export_SpecScreenSelect();\cf2 \
+\
+\cf5 // x = getTypeListByTypeName("BEEP");\cf2 \
+\cf5 // log(x)\cf2 \
+\
+\cf5 // function ftest()\cf2 \
+\cf5 // \{\cf2 \
+\cf5 //     log("ftest called")\cf2 \
+\cf5 // \}\cf2 \
+\cf5 // setMemProperty("x", "y")\cf2 \
+\cf5 // log(getMemProperty("x"))\cf2 \
+\cf5 // setMemProperty("f", ftest)\cf2 \
+\cf5 // func = getMemProperty("f")\cf2 \
+\cf5 // func()\cf2 \
+\cf5 // var xdict = \{"x":"z"\}\cf2 \
+\cf5 // setMemProperty("x1", xdict)\cf2 \
+\cf5 // log(getMemProperty("x1"))\cf2 \
+\
+\cf5 // log(getMemProperty("x1"))\cf2 \
+\cf5 // log(getBMemProperty("keyX"))\cf2 \
+\cf5 // setBMemProperty("keyX","1")\cf2 \
+\cf5 // setBMemProperty("keyY","2")\cf2 \
+\cf5 // setBMemProperty("keyX","3")\cf2 \
+\cf5 // log(getBMemProperty("keyX"))\cf2 \
+\
+\cf5 // jobj = \{\}\cf2 \
+\cf5 // jobj["x"+"1"] = "x"\cf2 \
+\cf5 // jobj["x"] = \{\}\cf2 \
+\cf5 // jobj["x"]["z"] = "xxxxx"\cf2 \
+\cf5 // log(jobj)\cf2 \
+\cf5 // var jsonText = JSON.stringify(jobj);\cf2 \
+\cf5 // log(jsonText)\cf2 \
+\
+\
+\cf5 // var sScreenID = getMemProperty("SelectPartsInfo-screenID");\cf2 \
+\cf5 // if (!sScreenID) \{\cf2 \
+\cf5 //         log("    Invalid screenID!");\cf2 \
+\cf5 //     \};\cf2 \
+\cf5 // \cf2 \
+\cf5 // screenID = "USB001_01"\cf2 \
+\cf5 // partsID = "1"\cf2 \
+\cf5 // var FindPartsObj = nil;\cf2 \
+\cf5 // var scrObj = readJsonByScreenID(screenID);\cf2 \
+\cf5 // var jObjScreen = readJsonByScreenID(screenID);\cf2 \
+\cf5 //     if (jObjScreen) \{\cf2 \
+\cf5 //         if (jObjScreen.hasOwnProperty("PartsInfo")) \{\cf2 \
+\cf5 //             var jObjPartsInfo = jObjScreen["PartsInfo"];\cf2 \
+\cf5 //             for(var pageName in jObjPartsInfo)\cf2 \
+\cf5 //             \{    \cf2 \
+\cf5 //                 var pageParts = jObjPartsInfo[pageName]\cf2 \
+\cf5 //                 if (pageParts.hasOwnProperty("parts")) \{\cf2 \
+\cf5 //                     var partsList = pageParts["parts"]\cf2 \
+\cf5 //                     for(var partsName in partsList)\cf2 \
+\cf5 //                     \{\cf2 \
+\cf5 //                         if(partsName == partsID)\cf2 \
+\cf5 //                         \{\cf2 \
+\cf5 //                             FindPartsObj = partsList[partsName]\cf2 \
+\cf5 //                         \}\cf2 \
+\cf5 //                     \}\cf2 \
+\cf5 //                 \}\cf2 \
+\cf5 //             \}\cf2 \
+\cf5 //         \}\cf2 \
+\cf5 //         else\cf2 \
+\cf5 //         \{\cf2 \
+\cf5 //             SVLOG("    DB ScreenInfo error");\cf2 \
+\cf5 //         \}\cf2 \
+\cf5 //     \}\cf2 \
+\cf5 //     else\cf2 \
+\cf5 //     \{\cf2 \
+\cf5 //         SVLOG("    readJsonByScreenID error");\cf2 \
+\cf5 //     \}\cf2 \
+\cf5 // log(FindPartsObj)\cf2 \
+\cf5 // log(jObjPartsInfo)\cf2 \
+\
+\cf5 // updateArtboardToPage("2512512341241234", "USB001_01", "page1")\cf2 \
+\cf5 // artBoardInSPList = getPageInfoByArtBoardID("2512512341241234")\cf2 \
+\cf5 // if(artBoardInSPList.length > 0)\cf2 \
+\cf5 // \{\cf2 \
+\cf5 //     var inScreenID = artBoardInSPList[0].ScreenID;\cf2 \
+\cf5 //     var inPageID = artBoardInSPList[0].PageID;\cf2 \
+\cf5 //     log(inScreenID)\cf2 \
+\cf5 //     log(inPageID)\cf2 \
+\cf5 // \}\cf2 \
+\
+\cf5 // var filehandle = NSFileHandle.fileHandleForWritingAtPath("/Users/navibase/a.txt")\cf2 \
+\cf5 // var nsJsonText = [NSString  stringWithUTF8String:jsonText];\cf2 \
+\cf5 // nsJsonText.writeToFile_atomically("/Users/navibase/a.txt", true);\cf2 \
+\
+\
+\
+\
+\cf5 // \cf2 \
+\cf5 // log(getSketchIAutoPluginDocumentDir())\cf2 \
+\cf5 // SLOG("x")\cf2 \
+\cf5 // SLOGDelete()\cf2 \
+\
+\cf5 // artboardID=""\cf2 \
+\cf5 // screenID=nil\cf2 \
+\cf5 // var allScreenIDList = getScreenIDList()\cf2 \
+\cf5 // for(i=0; i<allScreenIDList.length; i++)\cf2 \
+\cf5 // \{\cf2 \
+\cf5 //     var scrObj = readJsonByScreenID(screenID);\cf2 \
+\cf5 //     if(scrObj.hasOwnProperty("PartsInfo"))\cf2 \
+\cf5 //     \{\cf2 \
+\cf5 //         var partsInfoObj = scrObj["PartsInfo"]\cf2 \
+\cf5 //         for (var key in partsInfoObj) \{\cf2 \
+\cf5 //             var page = [NSString  stringWithUTF8String:key];\cf2 \
+\cf5 //             var value = partsInfoObj[key];\cf2 \
+\cf5 // \cf2 \
+\cf5 //             if (value.hasOwnProperty("parts")) \{\cf2 \
+\cf5 //                 var partsObj = value["parts"];\cf2 \
+\cf5 //             \}\cf2 \
+\cf5 //         \}\cf2 \
+\cf5 //     \}\cf2 \
+\cf5 // \}\cf2 \
+\cf5 // log(screenID)\cf2 \
+\cf5 // \cf2 \
+\cf5 // \cf2 \
+\
+\cf5 //     var FindPartsObj = nil;\cf2 \
+\cf5 //     if(scrObj.hasOwnProperty("PartsInfo"))\cf2 \
+\cf5 //     \{\cf2 \
+\cf5 //         var partsInfoObj = scrObj["PartsInfo"]\cf2 \
+\cf5 //         for (var key in partsInfoObj) \{\cf2 \
+\cf5 //             var page = [NSString  stringWithUTF8String:key];\cf2 \
+\cf5 //             var value = partsInfoObj[key]\cf2 \
+\cf5 //             \cf2 \
+\cf5 //             if (value.hasOwnProperty("parts")) \{\cf2 \
+\cf5 //                 var partsObj = value["parts"];\cf2 \
+\cf5 // \cf2 \
+\cf5 //                 // find sub partsID\cf2 \
+\cf5 //                 for (var keyParts in partsObj) \{\cf2 \
+\cf5 //                     var curpartsID = [NSString  stringWithUTF8String:keyParts];\cf2 \
+\cf5 //                     if(partsID == curpartsID)\cf2 \
+\cf5 //                     \{\cf2 \
+\cf5 //                         FindPartsObj = partsObj[partsID]\cf2 \
+\cf5 //                     \}\cf2 \
+\cf5 //                 \}\cf2 \
+\cf5 //             \};\cf2 \
+\cf5 //         \}\cf2 \
+\cf5 //     \}\cf2 \
+\cf5 // var sPartsID = ""\cf2 \
+\cf5 // if(FindPartsObj.hasOwnProperty("Parts ID"))\cf2 \
+\cf5 // \{\cf2 \
+\cf5 //     sPartsID = FindPartsObj["Parts ID"]\cf2 \
+\cf5 // \}\cf2 \
+\cf5 // \cf2 \
+\cf5 // log(FindPartsObj)\cf2 \
+\
+\cf5 //var allScreenIDList = getScreenIDList()\cf2 \
+\cf5 //log(allScreenIDList)\cf2 \
+\
+\cf5 // var modelData1 = [NSMutableDictionary dictionary];\cf2 \
+\cf5 //     [modelData1 setObject:@"scrID114" forKey:@"ScreenID"];\cf2 \
+\cf5 //     [modelData1 setObject:@"base_scrID113" forKey:@"BasicScreenID"];\cf2 \
+\cf5 //     [modelData1 setObject:@"scrID1-name12" forKey:@"ScreenName"];\cf2 \
+\cf5 //     [modelData1 setObject:@"xxx notes11" forKey:@"Note"];\cf2 \
+\cf5 // var view = pluginMainView.shared();\cf2 \
+\cf5 // var partsView = view.getPartsView();\cf2 \
+\cf5 // var screenInfoView = view.getScreenInfoView();\cf2 \
+\cf5 // screenInfoView.setModelData(modelData1);\cf2 \
+\
+\
+\
+\cf5 // sScreenID = scrObj["ScreenID"]\cf2 \
+\cf5 // sBasicScreenID = scrObj["BasicScreenID"]\cf2 \
+\cf5 // sName = scrObj["ScreenName"]\cf2 \
+\cf5 // sNote = scrObj["Note"]\cf2 \
+\cf5 // log(sScreenID)\cf2 \
+\cf5 // log(sBasicScreenID)\cf2 \
+\cf5 // log(sName)\cf2 \
+\cf5 // log(sNote)\cf2 \
+\
+\
+\cf5 // function loadFramework(fwName, path) \{\cf2 \
+\cf5 //   var mocha = Mocha.sharedRuntime();\cf2 \
+\cf5 //   var frameworkName = fwName;\cf2 \
+\cf5 //   var directory = path;\cf2 \
+\cf5 //   \cf2 \
+\cf5 //   if (mocha.valueForKey(frameworkName)) \{\cf2 \
+\cf5 //     log("already loaded");\cf2 \
+\cf5 //     return true;\cf2 \
+\cf5 //   \} \cf2 \
+\cf5 //   else if ([mocha loadFrameworkWithName:frameworkName inDirectory:directory]) \{\cf2 \
+\cf5 //     mocha.setValue_forKey_(true, frameworkName);\cf2 \
+\cf5 //     log("load success");\cf2 \
+\cf5 //     return true;\cf2 \
+\cf5 //   \} \cf2 \
+\cf5 //   else \{\cf2 \
+\cf5 //     log("load error");\cf2 \
+\cf5 //     return false;\cf2 \
+\cf5 //   \}\cf2 \
+\cf5 // \}\cf2 \
+\cf5 // loadFramework("sketchPluginFramework", "/Users/navibase/sketch-iauto/sketchplugin/bundle_xcode/sketchPluginFramework");\cf2 \
+\cf5 // \cf2 \
+\cf5 // sc = SCommon.shared()\cf2 \
+\cf5 // sc.setMemProperty_Value("keyx", "value1")\cf2 \
+\cf5 // log([sc getMemProperty:@"x"])\cf2 \
+\cf5 // log([sc getMemProperty:@"keyx"])\cf2 \
+\cf5 // const mainSplitView = context.document.splitViewController().splitView()\cf2 \
+\cf5 // let mainSplitSubviews = mainSplitView.arrangedSubviews()\cf2 \
+\
+\cf5 // SInherit\cf2 \
+\cf5 // SInherit = function(className, BaseClass, selectorHandlerDict) \{\cf2 \
+\cf5 //     var uniqueClassName = className + NSUUID.UUID().UUIDString();\cf2 \
+\cf5 //     var delegateClassDesc = MOClassDescription.allocateDescriptionForClassWithName_superclass_(uniqueClassName, BaseClass);\cf2 \
+\cf5 //     for (var selectorString in selectorHandlerDict) \{\cf2 \
+\cf5 //         delegateClassDesc.addInstanceMethodWithSelector_function_(selectorString, selectorHandlerDict[selectorString]);\cf2 \
+\cf5 //         //log(selectorString + "->" + selectorHandlerDict[selectorString].toString())\cf2 \
+\cf5 //     \}\cf2 \
+\cf5 //     delegateClassDesc.registerClass();\cf2 \
+\cf5 //     return NSClassFromString(uniqueClassName);\cf2 \
+\cf5 // \};\cf2 \
+\cf5 // var Delegate = SInherit("NSDelagate", SScreenInfoViewDelegate, \{\cf2 \
+\cf5 //     "comboBoxSelectionDidChange:":function(notify)\{ \cf2 \
+\cf5 //     \}\cf2 \
+\cf5 // \})\cf2 \
+\cf5 // log(Delegate)\cf2 \
+\cf5 // var delegageObj = Delegate.alloc().init()\cf2 \
+\cf5 // log(delegageObj)\cf2 \
+\cf5 // \cf2 \
+\cf5 // var view = pluginMainView.shared();\cf2 \
+\cf5 // view.showParts()\cf2 \
+\cf5 // view.showScreen()\cf2 \
+\cf5 // var partsView = view.getPartsView();\cf2 \
+\cf5 // var screenInfoView = view.getScreenInfoView();\cf2 \
+\cf5 // screenInfoView.setDelegage(delegageObj);\cf2 \
+\cf5 // \cf2 \
+\cf5 // testmodelData = partsView.getTestModelData()\cf2 \
+\cf5 // partsView.setModelData(testmodelData);\cf2 \
+\cf5 // log("end")\cf2 \
+\cf5 // \cf2 \
+\cf5 // mainSplitView.insertArrangedSubview_atIndex(partsView, mainSplitSubviews.length-1)\cf2 \
+\cf5 //log(context.selection[0])\cf2 \
+}

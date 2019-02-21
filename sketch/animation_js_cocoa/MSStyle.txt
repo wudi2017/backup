@@ -1,0 +1,17 @@
+// var style = MSStyle.new();
+// var fillStyle = MSStyleFill.new();
+// var msColor = MSColor.colorWithNSColor(NSColor.colorWithDeviceRed_green_blue_alpha(1, 0, 0, 1))
+// fillStyle.setColor(msColor)
+// style.fills().addObject(fillStyle)
+// var borderStyle = MSStyleBorder.new();
+// var msColor = MSColor.colorWithNSColor(NSColor.colorWithDeviceRed_green_blue_alpha(0, 1, 0, 1))
+// borderStyle.setColor(msColor)
+// style.borders().addObject(borderStyle)
+// selection.setStyle(style)
+
+// log(selection.style().fills()[0].color())
+// log(selection.style().fills()[0].fillType())
+//log(selection.font())
+//selection.setGlyphBounds(CGRectMake(0,0,100,100))
+// font = [NSFont fontWithName:"ArialMT" size:200]
+// selection.setFont(font)

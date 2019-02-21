@@ -1,0 +1,28 @@
+var allArtboardCount = 0
+var mainArtboardCount = 0
+var pages = context.document.pages()
+for(var iPage=0; iPage<pages.length; iPage++)
+{
+    var page = pages[iPage];
+    if(page.name() == "Symbols")
+    {
+      continue;
+    }
+
+    var artboards = page.artboards();
+    for(var iArtboard=0; iArtboard<artboards.count(); iArtboard++)
+    {
+        var artboard = artboards[iArtboard]
+        if(artboard.name().indexOf("ref:") > 0)
+        {
+        }
+        else
+        {
+          mainArtboardCount = mainArtboardCount+1
+        }
+        allArtboardCount = allArtboardCount + 1
+        
+    }
+}
+log(allArtboardCount)
+log(mainArtboardCount)
