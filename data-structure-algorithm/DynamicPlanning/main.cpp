@@ -12,6 +12,7 @@ v[] (volume table)
 w[] (value table)
 T (group count)
 t[] (group table)
+p[] (depend parent table)
 */
 
 // base 0-1
@@ -231,8 +232,21 @@ int main_group()
 
 
 
-//  base depend
-// tree
+//  base tree depend
+// https://blog.csdn.net/stevensonson/article/details/83861883
+// https://www.cnblogs.com/aininot260/p/9308736.html
+// https://blog.csdn.net/sdz20172133/article/details/82954601
+// https://blog.csdn.net/weixin_42757232/article/details/88356729
+/*
+V=7 N=5 
+v w p
+2 3 -1
+2 2 1 
+3 5 1
+4 7 2
+3 6 2
+--->>> result: W=11
+*/
 vector<int> endPoint(100,0),head(100,0),next(100,0);
 vector<int> root;
 int tmpCount=1;
