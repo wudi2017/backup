@@ -163,6 +163,74 @@ void sort_merge(vector<int> & arr)
 	sort_merge_impl(arr, 0, arr.size()-1, temparr);
 }
 
+
+//--------------------------------------------------
+// heap sort
+void adjust_heap(vector<int> & arr, int i, int j)
+{
+	//cout<<"i:"<<i<<" j:"<<j<<endl;
+	while(true)
+	{
+		if (2*i+2<=j) // has left & right
+		{
+			int left = arr[2*i+1];
+			int right = arr[2*i+2];
+			//cout<<"left:"<<left<<"right:"<<right<<endl;
+			if(arr[i]<=left && arr[i]<=right)
+			{
+				break;
+			}
+			else if(left<right)
+			{
+				swap(arr, i, 2*i+1);
+				i=2*i+1;
+			}
+			else
+			{
+				swap(arr, i, 2*i+2);
+				i=2*i+2;
+			}
+		}
+		else if(2*i+1<=j) // has left
+		{
+			int left = arr[2*i+1];
+			//cout<<"left:"<<left<<endl;
+			if(arr[i]<=left)
+			{
+				break;
+			}
+			else
+			{
+				swap(arr, i, 2*i+1);
+				i=2*i+1;
+			}
+		}
+		else
+		{
+			break;
+		}
+		
+	}
+	//printArr(arr);
+	
+}
+void create_heap(vector<int> & arr, int maxi)
+{
+	for (int i = maxi/2; i >=0; i--)
+	{
+		adjust_heap(arr, i, maxi);
+	}
+}
+
+void sort_heap(vector<int> & arr)
+{
+	create_heap(arr, arr.size()-1);
+	for (int i = arr.size()-1; i >= 0; i--)
+	{
+		swap(arr, 0, i);
+		adjust_heap(arr, 0, i-1);
+	}
+}
 //--------------------------------------------------
 // main
 
@@ -190,7 +258,7 @@ int main()
 	printArr(arr);
 
 	cout<<"call sort:"<<endl;
-	sort_merge(arr);
+	sort_heap(arr);
 
 	cout<<"result:"<<endl;
 	printArr(arr);
