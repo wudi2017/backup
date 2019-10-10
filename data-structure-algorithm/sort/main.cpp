@@ -113,6 +113,57 @@ void sort_fast(vector<int> & arr)
 
 
 //--------------------------------------------------
+// merge sort
+void sort_merge_merge(vector<int> & arr, int i, int m, int j, vector<int> & temparr)
+{
+	//cout<<i<<m<<j<<endl;
+	int iTemp = i;
+	int i1 = i;
+	int i2 = m+1;
+	while(i1<=m && i2<=j)
+	{
+		if(arr[i1] > arr[i2])
+		{
+			temparr[iTemp++] = arr[i2++];
+		}
+		else
+		{
+			temparr[iTemp++] = arr[i1++];
+		}
+	}
+	for (int k = i1; k <= m; ++k)
+	{
+		temparr[iTemp++] = arr[k];
+	}
+	for (int k = i2; k <= j; ++k)
+	{
+		temparr[iTemp++] = arr[k];
+	}
+
+	// copy tmparr -> origin arr
+	for (int u = i; u <= j; ++u)
+	{
+		arr[u]=temparr[u];
+	}
+}
+void sort_merge_impl(vector<int> & arr, int i, int j, vector<int> & temparr)
+{
+	if(i<j)
+	{
+		int mid = i + (j-i)/2;
+		sort_merge_impl(arr, i, mid, temparr);
+		sort_merge_impl(arr, mid+1, j, temparr);
+		sort_merge_merge(arr, i, mid, j, temparr);
+	}
+	
+}
+void sort_merge(vector<int> & arr)
+{
+	vector<int> temparr(arr.size());
+	sort_merge_impl(arr, 0, arr.size()-1, temparr);
+}
+
+//--------------------------------------------------
 // main
 
 
@@ -139,7 +190,7 @@ int main()
 	printArr(arr);
 
 	cout<<"call sort:"<<endl;
-	sort_fast(arr);
+	sort_merge(arr);
 
 	cout<<"result:"<<endl;
 	printArr(arr);
