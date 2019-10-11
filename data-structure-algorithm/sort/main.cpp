@@ -29,23 +29,98 @@ void swap(vector<int> & arr, int a, int b)
 }
 
 //--------------------------------------------------
-// select sort
-void sort_select(vector<int> & arr)
+// bubble sort 
+void sort_bubble(vector<int> & arr)
 {
-	for (int i = 0; i < arr.size(); ++i)
+	for (int i = arr.size()-1; i >=0; --i)
 	{
-		int minval = arr[i];
-		int newMinIndex = i;
-		for (int j=i+1; j < arr.size(); ++j)
+		for (int j=0; j<i; ++j)
 		{
-			if(arr[j] < minval)
+			if(arr[j] > arr[j+1])
 			{
-				newMinIndex=j;
+				swap(arr, j, j+1);
 			}
 		}
-		swap(arr, i, newMinIndex);
 	}
 }
+
+//--------------------------------------------------
+// insert sort 
+void sort_insert(vector<int> & arr)
+{
+	for (int i = 1; i<arr.size(); ++i)
+	{
+		int insertval = arr[i];
+
+		int j=i-1;
+		for (; j>=0; --j)
+		{
+			if(arr[j] > insertval)
+			{
+				arr[j+1]=arr[j];
+			}
+			else
+			{
+				break;
+			}
+		}
+		arr[j+1]=insertval;
+		//printArr(arr);
+	}
+
+}
+
+//--------------------------------------------------
+// merge sort
+void sort_merge_merge(vector<int> & arr, int i, int m, int j, vector<int> & temparr)
+{
+	//cout<<i<<m<<j<<endl;
+	int iTemp = i;
+	int i1 = i;
+	int i2 = m+1;
+	while(i1<=m && i2<=j)
+	{
+		if(arr[i1] > arr[i2])
+		{
+			temparr[iTemp++] = arr[i2++];
+		}
+		else
+		{
+			temparr[iTemp++] = arr[i1++];
+		}
+	}
+	for (int k = i1; k <= m; ++k)
+	{
+		temparr[iTemp++] = arr[k];
+	}
+	for (int k = i2; k <= j; ++k)
+	{
+		temparr[iTemp++] = arr[k];
+	}
+
+	// copy tmparr -> origin arr
+	for (int u = i; u <= j; ++u)
+	{
+		arr[u]=temparr[u];
+	}
+}
+void sort_merge_impl(vector<int> & arr, int i, int j, vector<int> & temparr)
+{
+	if(i<j)
+	{
+		int mid = i + (j-i)/2;
+		sort_merge_impl(arr, i, mid, temparr);
+		sort_merge_impl(arr, mid+1, j, temparr);
+		sort_merge_merge(arr, i, mid, j, temparr);
+	}
+	
+}
+void sort_merge(vector<int> & arr)
+{
+	vector<int> temparr(arr.size());
+	sort_merge_impl(arr, 0, arr.size()-1, temparr);
+}
+
 
 //--------------------------------------------------
 // fast sort
@@ -100,8 +175,8 @@ void sort_fast_imp(vector<int> & arr,int i, int j)
 		return;
 	int iM = sort_fast_sep(arr, i, j);
 
-	cout<<i<<iM<<j<<endl;
-	printArr(arr);
+	//cout<<i<<iM<<j<<endl;
+	//printArr(arr);
 
 	sort_fast_imp(arr, i, iM-1);
 	sort_fast_imp(arr, iM+1, j);
@@ -111,56 +186,23 @@ void sort_fast(vector<int> & arr)
 	sort_fast_imp(arr, 0, arr.size()-1);
 }
 
-
 //--------------------------------------------------
-// merge sort
-void sort_merge_merge(vector<int> & arr, int i, int m, int j, vector<int> & temparr)
+// select sort
+void sort_select(vector<int> & arr)
 {
-	//cout<<i<<m<<j<<endl;
-	int iTemp = i;
-	int i1 = i;
-	int i2 = m+1;
-	while(i1<=m && i2<=j)
+	for (int i = 0; i < arr.size(); ++i)
 	{
-		if(arr[i1] > arr[i2])
+		int minval = arr[i];
+		int newMinIndex = i;
+		for (int j=i+1; j < arr.size(); ++j)
 		{
-			temparr[iTemp++] = arr[i2++];
+			if(arr[j] < minval)
+			{
+				newMinIndex=j;
+			}
 		}
-		else
-		{
-			temparr[iTemp++] = arr[i1++];
-		}
+		swap(arr, i, newMinIndex);
 	}
-	for (int k = i1; k <= m; ++k)
-	{
-		temparr[iTemp++] = arr[k];
-	}
-	for (int k = i2; k <= j; ++k)
-	{
-		temparr[iTemp++] = arr[k];
-	}
-
-	// copy tmparr -> origin arr
-	for (int u = i; u <= j; ++u)
-	{
-		arr[u]=temparr[u];
-	}
-}
-void sort_merge_impl(vector<int> & arr, int i, int j, vector<int> & temparr)
-{
-	if(i<j)
-	{
-		int mid = i + (j-i)/2;
-		sort_merge_impl(arr, i, mid, temparr);
-		sort_merge_impl(arr, mid+1, j, temparr);
-		sort_merge_merge(arr, i, mid, j, temparr);
-	}
-	
-}
-void sort_merge(vector<int> & arr)
-{
-	vector<int> temparr(arr.size());
-	sort_merge_impl(arr, 0, arr.size()-1, temparr);
 }
 
 
@@ -231,6 +273,7 @@ void sort_heap(vector<int> & arr)
 		adjust_heap(arr, 0, i-1);
 	}
 }
+
 //--------------------------------------------------
 // main
 
@@ -258,6 +301,11 @@ int main()
 	printArr(arr);
 
 	cout<<"call sort:"<<endl;
+	sort_bubble(arr);
+	sort_insert(arr);
+	sort_merge(arr);
+	sort_fast(arr);
+	sort_select(arr);
 	sort_heap(arr);
 
 	cout<<"result:"<<endl;
